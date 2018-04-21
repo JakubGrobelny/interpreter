@@ -1,4 +1,4 @@
-public class Function : Value {
+public abstract class Function : Value {
 
     private string name;
 

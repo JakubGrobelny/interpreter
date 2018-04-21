@@ -10,18 +10,18 @@ public class Application : Combination {
 
     public Expression Evaluate(Environment env) {
 
-        Expression proc = procedure.Evaluate(env);
+        Function proc = procedure.Evaluate(env) as Function;
 
-        try {
-            return proc.Call(arguments, env);
-        }
-        catch (ApplicationNotAProcedure) {
+        if (proc == null) {
             throw ApplicationNotAProcedure(ToString());
+        }
+        else {
+            return proc.Call(arguments, env);
         }
     }
 
     public string ToString() {
-        
+
         string result = "(" + procedure.ToString();
         
         for (int i = 0; i < arguments.Length - 1; i++) {

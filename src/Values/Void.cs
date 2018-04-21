@@ -7,7 +7,6 @@ public class Void : Value {
             if (instance == null) {
                 instance = new Void();
             }
-
             return instance;
         }
     }
