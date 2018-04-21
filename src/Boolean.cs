@@ -1,5 +1,5 @@
 public class Bool : Value {
-    //TODO: Singleton
+
     private bool value;
 
     public bool GetValue() {

@@ -3,6 +3,24 @@ public class Pair : Value {
     private Expression first;
     private Expression second;
 
+    public Expression First {
+        get {
+            return first;
+        }
+        set {
+            first = value;
+        }
+    }
+
+    public Expression Second {
+        get {
+            return second;
+        }
+        set {
+            second = value;
+        }
+    }
+
     public Expression GetFirst() {
         return first;
     }

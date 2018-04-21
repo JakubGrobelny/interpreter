@@ -3,11 +3,47 @@ using Environment = Dictionary<Symbol, Expression>;
 
 public class VariadicClosure : Closure {
 
-    //TODO:
-    //TODO:
-    //TODO:
-
     public Expression Call(List<Expression> arguments, Environment env) {
+        
+        // There must an argument for every non-variadic parameter.
+        if (arguments.Length < parameters.Length - 1) {
+            throw ArityMismatch(ToString(), parameters.Length, arguments.Length);
+        }
+
+        var extendedEnvironment = new Environment(env);
+
+        // Adding local environment from closure to the environment.
+        foreach (var entry in localEnvironment) {
+            extendedEnvironment[entry.Key] = entry.Value;
+        }
+
+        // Adding passed arguments to the environments.
+        for (int i = 0; i < parameters.Length - 1; i++) {
+            extendedEnvironment[parameters[i]] = arguments[i].Evaluate(env);
+        }
+
+        Expression argList;
+
+        // If there were no arguments for variadic parameter, then it is set to Null.
+        if (parameters.Length == arguments.Length - 1) {
+            argList = Null.Instance;
+        }
+        else 
+        {
+            // Creating a list of arguments.
+            argList = new Pair(parameters.Length - 1, Null.Instance);
+            var ptr = argList;
+
+            for (int i = parameters.Length; i < arguments.Length; i++) {
+                ptr.Second = new Pair(arguments[i], Null.Instance);
+                ptr = ptr.Second;
+            }
+        }
+
+        // Adding variadic argument to the environment,
+        extendedEnvironment[parameters[parameters.Length - 1]] = argList;
+
+        return expression.Evaluate(extendedEnvironment);
 
     }
 

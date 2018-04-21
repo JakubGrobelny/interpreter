@@ -21,6 +21,7 @@ public class Application : Combination {
     }
 
     public string ToString() {
+        
         string result = "(" + procedure.ToString();
         
         for (int i = 0; i < arguments.Length - 1; i++) {
