@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Environment = Dictionary<Symbol, Expression>;
+
 using Errors;
 
 public class Application : Combination {
@@ -7,38 +9,23 @@ public class Application : Combination {
     private List<Expression> arguments;
 
     public Expression Evaluate(Environment env) {
-        Closure closure = procedure.Evaluate(env);
 
-        if (!(closure is Closure))
+        Expression proc = procedure.Evaluate(env);
+
+        try {
+            return proc.Call(arguments, env);
+        }
+        catch (ApplicationNotAProcedure) {
             throw ApplicationNotAProcedure(ToString());
-
-        List<Symbol> formalParameters = closure.GetParameters();
-
-        if (formalParameters.Length != arguments.Length)
-            throw ArityMismatch(closure.ToString(),
-                                formalParameters.Length,
-                                arguments.Length);
-
-        var extendedEnv = new Dictionary<Symbol, Expression>(env);
-        var localEnv = closure.GetEnv();
-
-        foreach(var entry in localEnv) {
-            extendedEnv[entry.Key] = entry.Value;
         }
-
-        for (int i = 0; i < formalParameters.Length; i++) {
-            extendedEnv[formalParameters[i]] = arguments[i].Evaluate(env);
-        }
-
-        return closure.GetExpression().Evaluate(extendedEnv);
     }
 
     public string ToString() {
         string result = "(" + procedure.ToString();
         
-        for (int i = 0; i < arguments.Length - 1; i++)
+        for (int i = 0; i < arguments.Length - 1; i++) {
             result = result + arguments[i].ToString() + " ";
-        
+        }
 
         return result + arguments[arguments.Length - 1] + ")";
     }

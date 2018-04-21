@@ -1,22 +1,29 @@
 using System.Collections.Generic;
+using Environment = Dictionary<Symbol, Expression>;
 
-public class Closure : Value {
+public class Closure : Function {
 
-    private string name;
     private List<Symbol> parameters;
     private Expression expression;
     private Environment localEnvironment;
 
-    public List<Symbol> GetParameters() {
-        return parameters;
-    }
+    public Expression Call(List<Expression> arguments, Environment env) {
 
-    public Environment GetEnv() {
-        return localEnvironment;
-    }
+        if (arguments.Length != parameters.Length) {
+            throw ArityMismatch(ToString(), parameters.Length, arguments.Length);
+        }
 
-    public Expression GetExpression() {
-        return expression;
+        var extendedEnvironment = new Environment(env);
+        
+        foreach (var entry in localEnvironment) {
+            extendedEnvironment[entry.Key] = entry.Value;
+        }
+
+        for (int i = 0; i < parameters.Length; i++) {
+            extendedEnvironment[parameters[i]] = arguments[i].Evaluate(env);
+        }
+
+        return expression.Evaluate(extendedEnvironment);
     }
 
     public string ToString() {
@@ -24,10 +31,12 @@ public class Closure : Value {
     }
 
     public Closure(string name, List <Symbol> parameters,
-                   Expression expression, Environment localEnvironment) {
-        this.name = name;
+                   Expression expression, Environment localEnvironment) 
+                   : base(name) 
+    {
         this.parameters = parameters;
         this.expression = expression;
         this.localEnvironment = localEnvironment;
+        this.arity = parameters.Length;
     }
 }

@@ -1,6 +1,7 @@
 NAME = interpreter.exe
+MAIN = Interpreter.cs
 
 make:
-	mcs -out:$(NAME) src/interpreter.cs
+	mcs -out:$(NAME) $(MAIN)
 clean:
 	$(RM) $(NAME)
