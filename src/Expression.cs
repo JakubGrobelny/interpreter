@@ -9,7 +9,7 @@ public abstract class Combination : Expression {}
 
 public abstract class Value : Expression {
     
-    public Expression Evaluate(Environment env) {
+    public abstract Expression Evaluate(Environment env) {
         return this;
     }
 }

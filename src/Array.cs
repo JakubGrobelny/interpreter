@@ -3,7 +3,7 @@ public class Array : Value {
     private Expression[] array;
 
     public GetSize() {
-        return this.array.Length;
+        return array.Length;
     }
 
     public string ToString() {
@@ -20,7 +20,7 @@ public class Array : Value {
             if (key > array.Length) {
 
             }
-            return rray[key];
+            return array[key];
         }
         set {
             array[key] = value;
@@ -28,13 +28,13 @@ public class Array : Value {
     }
 
     public Array (int size, Expression val) {
-        this.array = new Expression[size];
+        array = new Expression[size];
         
         for (int i = 0; i < size; i++)
-            this.array[i] = val;
+            array[i] = val;
     }
 
     public Array(int size) {
-        this.array = new Expression[size];
+        array = new Expression[size];
     }
 }

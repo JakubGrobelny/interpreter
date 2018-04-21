@@ -7,29 +7,34 @@ public class Application : Combination {
     private List<Expression> arguments;
 
     public Expression Evaluate(Environment env) {
-        Closure closure = this.procedure.Evaluate(env);
+        Closure closure = procedure.Evaluate(env);
 
         if (!(closure is Closure))
-            throw ApplicationNotAProcedure(this.ToString());
+            throw ApplicationNotAProcedure(ToString());
 
-        List<Symbol> formalParameters = closure.getParameters();
+        List<Symbol> formalParameters = closure.GetParameters();
 
         if (formalParameters.Length != arguments.Length)
-            throw ArityMismatch(closure.toString(),
+            throw ArityMismatch(closure.ToString(),
                                 formalParameters.Length,
                                 arguments.Length);
 
         var extendedEnv = new Dictionary<Symbol, Expression>(env);
+        var localEnv = closure.GetEnv();
+
+        foreach(var entry in localEnv) {
+            extendedEnv[entry.Key] = entry.Value;
+        }
 
         for (int i = 0; i < formalParameters.Length; i++) {
             extendedEnv[formalParameters[i]] = arguments[i].Evaluate(env);
         }
 
-        return closure.Evaluate(extendedEnv);
+        return closure.GetExpression().Evaluate(extendedEnv);
     }
 
     public string ToString() {
-        string result = "(" + this.procedure.ToString();
+        string result = "(" + procedure.ToString();
         
         for (int i = 0; i < arguments.Length - 1; i++)
             result = result + arguments[i].ToString() + " ";

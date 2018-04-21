@@ -4,11 +4,11 @@ public class Pair : Value {
     private Expression second;
 
     public Expression GetFirst() {
-        return this.first;
+        return first;
     }
 
     public Expression GetSecond() {
-        return this.second;
+        return second;
     }
 
     public string ToString() {
