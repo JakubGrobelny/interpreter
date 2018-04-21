@@ -1,35 +1,34 @@
 using System.Collections.Generic;
 using Environment = Dictionary<Symbol, Expression>;
 
-public class Closure : Function {
-
+public class Closure : Function
+{
     protected List<Symbol> parameters;
     protected Expression expression;
     protected Environment localEnvironment;
 
-    public Expression Call(List<Expression> arguments, Environment env) {
+    public Expression Call(List<Expression> arguments, Environment env)
+    {
 
         // Checking whether parameters match passed arguments.
-        if (arguments.Length != parameters.Length) {
+        if (arguments.Length != parameters.Length)
             throw ArityMismatch(ToString(), parameters.Length, arguments.Length);
-        }
 
         var extendedEnvironment = new Environment(env);
 
         // Adding local environment to the environment.
-        foreach (var entry in localEnvironment) {
+        foreach (var entry in localEnvironment)
             extendedEnvironment[entry.Key] = entry.Value;
-        }
 
         // Adding arguments to the environment.
-        for (int i = 0; i < parameters.Length; i++) {
+        for (int i = 0; i < parameters.Length; i++)
             extendedEnvironment[parameters[i]] = arguments[i].Evaluate(env);
-        }
 
         return expression.Evaluate(extendedEnvironment);
     }
 
-    public string ToString() {
+    public string ToString()
+    {
         return "#<procedure:" + name + ">";
     }
 

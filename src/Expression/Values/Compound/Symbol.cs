@@ -1,24 +1,30 @@
 using System.Collections.Generic;
 using Environment = Dictionary<Symbol, Expression>;
 
-public class Symbol : Value {
+public class Symbol : Value
+{
 
     private string symbol;
 
-    public Expression Evaluate(Environment env) {
-        try {
+    public Expression Evaluate(Environment env)
+    {
+        try
+        {
             return env[symbol];
         }
-        catch {
+        catch
+        {
             throw UnboundVariable(ToString());
         }
     }
 
-    public string ToString() {
+    public string ToString()
+    {
         return symbol;
     }
 
-    public Symbol(string symbol) {
+    public Symbol(string symbol)
+    {
         this.symbol = symbol;
     }
 }

@@ -1,12 +1,14 @@
-public class StringLiteral : Value {
-
+public class StringLiteral : Value
+{
     private string value;
 
-    public string ToString() {
+    public string ToString()
+    {
         return "\"" + value + "\"";
     }
 
-    public StringLiteral(string value) {
+    public StringLiteral(string value)
+    {
         this.value = value;
     }
 }

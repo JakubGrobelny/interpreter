@@ -3,35 +3,33 @@ using Environment = Dictionary<Symbol, Expression>;
 
 using Errors;
 
-public class Application : Combination {
-
+public class Application : Combination
+{
     private Expression procedure;
     private List<Expression> arguments;
 
-    public Expression Evaluate(Environment env) {
-
+    public Expression Evaluate(Environment env)
+    {
         Function proc = procedure.Evaluate(env) as Function;
 
-        if (proc == null) {
+        if (proc == null)
             throw ApplicationNotAProcedure(ToString());
-        }
-        else {
+        else
             return proc.Call(arguments, env);
-        }
     }
 
-    public string ToString() {
-
+    public string ToString()
+    {
         string result = "(" + procedure.ToString();
         
-        for (int i = 0; i < arguments.Length - 1; i++) {
+        for (int i = 0; i < arguments.Length - 1; i++)
             result = result + arguments[i].ToString() + " ";
-        }
 
         return result + arguments[arguments.Length - 1] + ")";
     }
 
-    public Application(Expression procedure, List<Expression> arguments, int line) {
+    public Application(Expression procedure, List<Expression> arguments, int line)
+    {
         this.procedure = procedure;
         this.arguments = arguments;
         this.line = line;

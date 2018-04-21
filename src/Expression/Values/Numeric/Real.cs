@@ -1,16 +1,19 @@
-public class Real : Number {
-
+public class Real : Number
+{
     private double value;
 
-    public string ToString() { 
+    public string ToString()
+    {
         return value.ToString();
     }
 
-    public bool IsPositive() {
+    public bool IsPositive()
+    {
         return value >= 0.0f;
     }
 
-    public Real(double value) {
+    public Real(double value)
+    {
         this.value = value;
     }
 }

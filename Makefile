@@ -1,7 +1,7 @@
 NAME = interpreter.exe
-MAIN = Interpreter.cs
+FILES = src/*.cs
 
 make:
-	mcs -out:$(NAME) $(MAIN)
+	mcs -out:$(NAME) -pkg:dotnet $(FILES) 
 clean:
 	$(RM) $(NAME)

@@ -1,16 +1,19 @@
-public class Bool : Value {
-
+public class Bool : Value
+{
     private bool value;
 
-    public bool GetValue() {
+    public bool GetValue()
+    {
         return value;
     }
 
-    public ToString() {
+    public ToString()
+    {
         return value ? "#t" : "#f";
     }
 
-    public Bool(bool value) {
+    public Bool(bool value)
+    {
         this.value = value;
     }
 }

@@ -1,14 +1,16 @@
 using System.Numerics;
 
-public class Integer : Number {
-
+public class Integer : Number
+{
     private BigInteger value;
 
-    public string ToString() {
+    public string ToString()
+	{
         return value.ToString();
     }
 
-    public Integer(BigInteger value) {
+    public Integer(BigInteger value)
+	{
         this.value = value;
     }
 }
