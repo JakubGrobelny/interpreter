@@ -1,4 +1,4 @@
-public class QuotedExpr : Value {
+public class Quote : Value {
 
     private Expression expr;
 
@@ -10,7 +10,7 @@ public class QuotedExpr : Value {
         return "'" + expr.ToString();
     }
 
-    public QuotedExpr(Expression expr) {
+    public Quote(Expression expr) {
         this.expr = expr;
     }
 }

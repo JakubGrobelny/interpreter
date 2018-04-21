@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public class Pair : Value {
     
     private Expression first;
@@ -21,14 +23,6 @@ public class Pair : Value {
         }
     }
 
-    public Expression GetFirst() {
-        return first;
-    }
-
-    public Expression GetSecond() {
-        return second;
-    }
-
     public string ToString() {
         if (second is Pair)
             return "(" + first.ToString() + " " + second.ToString() + ")";
@@ -36,6 +30,23 @@ public class Pair : Value {
             return "(" + first.ToString() + ")";
         else
             return "(" + first.ToString() + " . " + second.ToString() + ")";
+    }
+
+    public static Value CreateList(List<Expression> elements) {
+        if (elements.Length == 0) {
+            return Null.Instance;
+        }
+        else {
+            Pair list = new Pair(elements[0], Null.Instance);
+            var ptr = list;
+            
+            for (int i = 1; i < elements.Length; i++) {
+                ptr.second = new Pair(elements[i], Null.Instance);
+                ptr = ptr.second;
+            }
+
+            return list;
+        }
     }
 
     public Pair(Expression first, Expression second) {

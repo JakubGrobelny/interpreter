@@ -28,16 +28,10 @@ public class VariadicClosure : Closure {
         if (parameters.Length == arguments.Length - 1) {
             argList = Null.Instance;
         }
-        else 
-        {
+        else {
             // Creating a list of arguments.
-            argList = new Pair(parameters.Length - 1, Null.Instance);
-            var ptr = argList;
-
-            for (int i = parameters.Length; i < arguments.Length; i++) {
-                ptr.Second = new Pair(arguments[i], Null.Instance);
-                ptr = ptr.Second;
-            }
+            List<Expression> argTail = arguments.Skip(parameters.Length - 1);
+            argList = Pair.CreateList(argTail);
         }
 
         // Adding variadic argument to the environment,
