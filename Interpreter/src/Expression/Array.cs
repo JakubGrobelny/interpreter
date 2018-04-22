@@ -1,4 +1,4 @@
-namespace Interpreter
+namespace Interpreter.Expression
 {
     public class Array : Value
     {

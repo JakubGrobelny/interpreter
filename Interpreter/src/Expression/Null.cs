@@ -1,9 +1,9 @@
-namespace Interpreter
+namespace Interpreter.Expression
 {
     public class Null : Value
     {
         private static Null instance = null;
-    
+		
         public static Null Instance
         {
             get

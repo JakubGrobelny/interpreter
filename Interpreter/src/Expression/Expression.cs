@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Interpreter
+namespace Interpreter.Expression
 {
     public abstract class Expression 
     { //TODO: implement Cloneable?

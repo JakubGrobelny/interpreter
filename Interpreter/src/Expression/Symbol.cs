@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 
-namespace Interpreter
+namespace Interpreter.Expression
 {
     public class Symbol : Value
     {
-
         private string symbol;
-
+        
         public override Expression Evaluate(Dictionary<Symbol, Expression> env)
         {
             try
@@ -18,7 +17,7 @@ namespace Interpreter
                 throw new UnboundVariable(ToString());
             }
         }
-
+        
         public override string ToString()
         {
             return symbol;

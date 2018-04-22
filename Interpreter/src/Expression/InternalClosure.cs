@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Interpreter
+namespace Interpreter.Expression
 {
     public delegate Expression InternalFunction(List<Expression> arguments, 
                                          Dictionary<Symbol, Expression> env);

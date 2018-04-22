@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Interpreter
+namespace Interpreter.Expression
 {
     public class Integer : Number
     {
