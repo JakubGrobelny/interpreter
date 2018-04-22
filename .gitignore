@@ -1,6 +1,7 @@
+.idea/
+bin/
+obj/
 .vscode
 *.exe
 *.dll
-.idea
-Interpreter/bin/*
-Interpreter/obj/*
+

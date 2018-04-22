@@ -11,10 +11,10 @@ namespace Interpreter
 
             try
             {
-                var list = lexer.splitIntoTokens(input);
-                Console.WriteLine(list.Count);
-                foreach (var element in list)
-                    Console.WriteLine(element);
+                var tokens = lexer.SplitIntoTokens(input);
+                var list = lexer.Tokenize(input);
+                
+                Console.WriteLine(list);
             }
             catch (InternalException exc)
             {
@@ -24,7 +24,7 @@ namespace Interpreter
             {
                 Console.WriteLine("Interpreter error!\n" +
                                   "If this has happened then you should " +
-                                  "report the bug." + exc.Message);                
+                                  "report the bug.\n" + exc);                
             }
             
             Console.ReadKey();
