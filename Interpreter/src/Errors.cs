@@ -53,6 +53,12 @@ namespace Interpreter
         public InvalidEmptyExpression()
             : base("Empty expression is not valid!") {}
     }
+
+    public class InvalidExpression : InternalException
+    {
+        public InvalidExpression(string keyword, string what)
+            : base("Invalid use of '" + keyword + "' in '" + what + "'!") {};
+    }
     
     // Interpreter errors.
     public class UnhandledLexerException : Exception
