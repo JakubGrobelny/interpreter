@@ -1,4 +1,4 @@
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
     public class Void : Value
     {
@@ -13,7 +13,6 @@ namespace Interpreter.Expression
                 return instance;
             }
         }
-
     
         public override string ToString()
         {

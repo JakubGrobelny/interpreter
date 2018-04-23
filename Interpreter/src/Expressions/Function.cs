@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
     public abstract class Function : Value
     {

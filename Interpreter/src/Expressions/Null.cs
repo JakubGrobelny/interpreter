@@ -1,4 +1,4 @@
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
     public class Null : Value
     {

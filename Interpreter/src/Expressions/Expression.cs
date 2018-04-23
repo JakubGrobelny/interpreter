@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
-    public abstract class Expression 
+    public abstract class Expression
     { //TODO: implement Cloneable?
         public abstract Expression Evaluate(Dictionary<Symbol, Expression> env);
         public abstract string ToString();

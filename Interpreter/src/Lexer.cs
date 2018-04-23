@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
 using static System.Char;
@@ -81,7 +82,7 @@ namespace Interpreter
                 throw new ParenthesisError(stack.Peek());
         }
 
-        public LinkedList<string> SplitIntoTokens(string text)
+        private LinkedList<string> SplitIntoTokens(string text)
         {
             CheckBraces(text);
             
@@ -89,6 +90,7 @@ namespace Interpreter
             var token = new StringBuilder();
             var readingString = false;
             var readingComment = false;
+            var prev = '\0';
             
             foreach (var c in text)
             {
@@ -105,14 +107,24 @@ namespace Interpreter
                     if (c == '"')
                     {
                         token.Append(c);
-                        if (readingString)
+                        if (readingString && prev != '\\')
                         {
                             readingString = false;
                             tokens.AddLast(token.ToString());
                             token.Clear();
                         }
-                        else
+                        else if (!readingString)
                             readingString = true;
+                    }
+                    else if (c == '\'' && !readingString)
+                    {
+                        if (token.Length != 0)
+                        {
+                            tokens.AddLast(token.ToString());
+                            token.Clear();
+                        }
+
+                        tokens.AddLast("'");
                     }
                     else if (IsBrace(c) && !readingString)
                     {
@@ -135,6 +147,8 @@ namespace Interpreter
                     else
                         token.Append(c);    
                 }
+
+                prev = c;
             }
 
             if (token.Length != 0)
@@ -186,10 +200,34 @@ namespace Interpreter
             return Tokenize(tokens);
         }
         
-        public TokenTree Tokenize(string text)
+        public List<TokenTree> Tokenize(string text)
         {
+            // TODO handle quotes ( '«expr» -> (quote «expr) )
+            
             var initiallySplit = SplitIntoTokens(text);
-            return Tokenize(initiallySplit);
+            var results = new List<TokenTree>();
+            
+            var tempList = new LinkedList<string>();
+            int nestCount = 0;
+
+            foreach (var token in initiallySplit)
+            {
+                tempList.AddLast(token);
+
+                if (token == "(")
+                    nestCount++;
+                if (token == ")")
+                {
+                    nestCount--;
+                    if (nestCount == 0)
+                    {
+                        results.Add(Tokenize(tempList));
+                        tempList.Clear();
+                    }
+                }
+            }
+            
+            return results;
         }
         
         public static Lexer Instance

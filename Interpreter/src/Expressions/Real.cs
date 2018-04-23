@@ -1,4 +1,6 @@
-namespace Interpreter.Expression
+using System;
+
+namespace Interpreter.Expressions
 {
     public class Real : Number
     {
@@ -17,6 +19,11 @@ namespace Interpreter.Expression
         public Real(double value)
         {
             this.value = value;
+        }
+
+        public Real(string str)
+        {
+            this.value = Double.Parse(str);
         }
     }
 }

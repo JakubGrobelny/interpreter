@@ -1,9 +1,9 @@
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
     public class Bool : Value
     {
         private bool value;
-
+        
         public bool GetValue()
         {
             return value;
@@ -14,6 +14,11 @@ namespace Interpreter.Expression
             return value ? "#t" : "#f";
         }
 
+        public Bool(string str)
+        {
+            this.value = str == "#t";
+        }
+        
         public Bool(bool value)
         {
             this.value = value;

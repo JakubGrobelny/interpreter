@@ -3,6 +3,7 @@ using static System.String;
 
 namespace Interpreter
 {
+    // Errors in user's code.
     public class InternalException : Exception
     {
         protected InternalException(string what)
@@ -44,7 +45,20 @@ namespace Interpreter
     public class ParenthesisError : InternalException
     {
         public ParenthesisError(char brace) 
-            : base("Unmatched " + brace + " brace!") {}
+            : base("Unmatched '" + brace + "' brace!") {}
+    }
+
+    public class InvalidEmptyExpression : InternalException
+    {
+        public InvalidEmptyExpression()
+            : base("Empty expression is not valid!") {}
+    }
+    
+    // Interpreter errors.
+    public class UnhandledLexerException : Exception
+    {
+        public UnhandledLexerException(string what)
+            : base("Unhandled lexer exception! " + what) {}
     }
 }
 

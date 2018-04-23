@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
     public class Integer : Number
     {
@@ -14,6 +14,11 @@ namespace Interpreter.Expression
         public Integer(BigInteger value)
         {
             this.value = value;
+        }
+
+        public Integer(string str)
+        {
+            value = BigInteger.Parse(str);
         }
     }
 }

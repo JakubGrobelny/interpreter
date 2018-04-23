@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
     public class VariadicClosure : Closure
     {

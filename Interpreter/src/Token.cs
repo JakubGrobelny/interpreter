@@ -10,7 +10,7 @@ namespace Interpreter
     {
         public string token;
 
-        public override String ToString()
+        public override string ToString()
         {
             return token;
         }

@@ -11,10 +11,10 @@ namespace Interpreter
 
             try
             {
-                var tokens = lexer.SplitIntoTokens(input);
                 var list = lexer.Tokenize(input);
                 
-                Console.WriteLine(list);
+                foreach (var expr in list)
+                    Console.WriteLine(expr);
             }
             catch (InternalException exc)
             {

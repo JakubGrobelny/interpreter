@@ -1,4 +1,4 @@
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
     public class StringLiteral : Value
     {
@@ -11,7 +11,10 @@ namespace Interpreter.Expression
 
         public StringLiteral(string value)
         {
-            this.value = value;
+            if (value.Length == 2)
+                this.value = "";
+            else
+                this.value = value.Substring(1, value.Length - 2);
         }
     }
 }

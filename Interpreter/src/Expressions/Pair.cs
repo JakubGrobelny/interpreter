@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 
-namespace Interpreter.Expression
+namespace Interpreter.Expressions
 {
     public class Pair : Value
     {
-    
         private Expression first;
         private Expression second;
 
