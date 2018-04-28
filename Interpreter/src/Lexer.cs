@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -205,6 +206,13 @@ namespace Interpreter
             // TODO handle quotes ( '«expr» -> (quote «expr) )
             
             var initiallySplit = SplitIntoTokens(text);
+
+            if (initiallySplit.Count >= 3 && initiallySplit.First.Value == "(")
+            {
+                initiallySplit.RemoveFirst();
+                initiallySplit.RemoveLast();
+            }
+            
             var results = new List<TokenTree>();
             
             var tempList = new LinkedList<string>();
@@ -212,12 +220,17 @@ namespace Interpreter
 
             foreach (var token in initiallySplit)
             {
-                tempList.AddLast(token);
-
                 if (token == "(")
-                    nestCount++;
-                if (token == ")")
                 {
+                    if (nestCount != 0)                    
+                            tempList.AddLast(token);
+                    nestCount++;
+                }
+                else if (token == ")")
+                {
+                    if (nestCount != 0)                    
+                        tempList.AddLast(token);
+                    
                     nestCount--;
                     if (nestCount == 0)
                     {
@@ -225,8 +238,14 @@ namespace Interpreter
                         tempList.Clear();
                     }
                 }
+                else if (nestCount != 0)
+                    tempList.AddLast(token);
+                else 
+                    results.Add(new Token(token));
             }
-            
+
+            if (tempList.Count != 0)
+                results.Add(Tokenize(tempList));
             return results;
         }
         

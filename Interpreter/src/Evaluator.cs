@@ -34,50 +34,52 @@ namespace Interpreter
                 if (expr.children.Count == 0)
                     throw new InvalidEmptyExpression();
 
-                if (list[0] == "def")
+                if (list[0].ToString() == "def")
                 {
                     if (list.Count != 3)
                         throw new InvalidExpression("def", expr.ToString());
 
-                    var value = list[2].Evaluate(environment);
-                    var symbol = list[1].Evaluate(environment) as Symbol;
+                    var value = EvaluateExpression(list[2]).Evaluate(environment);
+                    var symbol = EvaluateExpression(list[1]).Evaluate(environment) as Symbol;
                     
                     environment[symbol] = value;
                     
                     return Void.Instance;
                 }
-                if (list[0] == "if")
+                if (list[0].ToString() == "if")
                 {
                     if (list.Count != 4)
                         throw new InvalidExpression("if", expr.ToString());
 
                     // TODO: casting to bool
-                    var cond = list[1].Evaluate(environment);
+                    var cond = EvaluateExpression(list[1]).Evaluate(environment);
 
                     if (!(cond is Bool) || (cond as Bool).GetValue())
-                        return list[2].Evaluate(environment);
+                        return EvaluateExpression(list[2]).Evaluate(environment);
                     else
-                        return list[3].Evaluate(environment);
+                        return EvaluateExpression(list[3]).Evaluate(environment);
                 }
-                if (list[0] == "and")
+                if (list[0].ToString() == "and")
                 {
                     for (int i = 1; i < list.Count; i++)
-                        if ((list[i].Evaluate(environment) is Bool) && 
-                           !(list[i].Evaluate(environment) as Bool).GetValue())
+                        if ((EvaluateExpression(list[i]).Evaluate(environment) is Bool) && 
+                           !(EvaluateExpression(list[i]).Evaluate(environment) as Bool).GetValue())
                             return new Bool(false);                    
 
                     return new Bool(true);
                 }
-                if (list[0] == "or")
+                if (list[0].ToString() == "or")
                 {
-                    for (int i = 1; i < list.Count; i++)
-                        if (!(list[i].Evaluate(environment) is Bool) || 
-                             (list[i].Evaluate(environment) as Bool).GetValue())
+                    for (var i = 1; i < list.Count; i++)
+                        if (!(EvaluateExpression(list[i]).Evaluate(environment) is Bool) || 
+                             (EvaluateExpression(list[i]).Evaluate(environment) as Bool).GetValue())
                             return new Bool(true);
 
                     return new Bool(false);
                 }
             }
+
+            return null;
         }
     }
 }

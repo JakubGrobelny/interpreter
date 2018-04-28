@@ -57,7 +57,7 @@ namespace Interpreter
     public class InvalidExpression : InternalException
     {
         public InvalidExpression(string keyword, string what)
-            : base("Invalid use of '" + keyword + "' in '" + what + "'!") {};
+            : base("Invalid use of '" + keyword + "' in '" + what + "'!") {}
     }
     
     // Interpreter errors.

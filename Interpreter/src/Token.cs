@@ -8,6 +8,27 @@ namespace Interpreter
 
     public class Token : TokenTree
     {
+        protected bool Equals(Token other)
+        {
+            return string.Equals(token, other.token);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) 
+                return false;
+            if (ReferenceEquals(this, obj)) 
+                return true;
+            if (obj.GetType() != this.GetType()) 
+                return false;
+            return Equals((Token) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (token != null ? token.GetHashCode() : 0);
+        }
+
         public string token;
 
         public override string ToString()
