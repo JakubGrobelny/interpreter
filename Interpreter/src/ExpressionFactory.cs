@@ -71,10 +71,6 @@ namespace Interpreter
             // Types that are more difficult to parse.
             else
             {
-                BigInteger integer;
-                if (BigInteger.TryParse(expr, out integer))
-                    return new Integer(integer);
-                
                 double real;
                 if (Double.TryParse(expr, out real))
                     return new Real(real);

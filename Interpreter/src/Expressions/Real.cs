@@ -6,9 +6,20 @@ namespace Interpreter.Expressions
     {
         private double value;
 
+        public double Value
+        {
+            get => value;
+            set => this.value = value;
+        }
+
         public override string ToString()
         {
             return value.ToString();
+        }
+
+        protected override double ToDouble()
+        {
+            return value;
         }
 
         public bool IsPositive()
