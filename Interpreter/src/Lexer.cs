@@ -158,97 +158,56 @@ namespace Interpreter
             return tokens;
         }
 
-        private TokenTree Tokenize(LinkedList<string> tokens)
-        {
-            if (tokens.Count == 1)
-                return new Token(tokens.First.Value);
-            
-            if (tokens.First.Value != "(")
-            {
-                var list = new TokenNode();
-                var nestCount = 0;
-                var listForRecursion = new LinkedList<string>();
-                
-                foreach (var token in tokens)
-                {
-                    if (token == "(")
-                    {
-                        nestCount++;
-                        if (nestCount != 1)
-                            listForRecursion.Append(token);
-                    }
-
-                    if (token == ")")
-                    {
-                        nestCount--;
-
-                        if (nestCount == 0 && listForRecursion.Count != 0)
-                        {
-                            var node = new TokenNode();
-                            list.children.Add(Tokenize(listForRecursion));
-                            listForRecursion.Clear();
-                        }
-                    }
-                    else
-                        list.children.Add(new Token(token));
-                }
-
-                return list;
-            }
-
-            tokens.RemoveFirst();
-            tokens.RemoveLast();
-            return Tokenize(tokens);
-        }
-        
         public List<TokenTree> Tokenize(string text)
         {
             // TODO handle quotes ( '«expr» -> (quote «expr) )
             
             var initiallySplit = SplitIntoTokens(text);
-
-            if (initiallySplit.Count >= 3 && initiallySplit.First.Value == "(")
-            {
-                initiallySplit.RemoveFirst();
-                initiallySplit.RemoveLast();
-            }
+            var totalList = new List<TokenTree>();
+            TokenTree tempListPtr = null;
+            var nestCounter = 0;
+            var nestStack = new Stack<TokenTree>();
             
-            var results = new List<TokenTree>();
-            
-            var tempList = new LinkedList<string>();
-            int nestCount = 0;
-
+            // Go through the tokens and add a new TokenNode every time
+            // nested brackets are encountered. After nested brackets end
+            // return to the main list and continue appending tokens to it.
             foreach (var token in initiallySplit)
             {
                 if (token == "(")
                 {
-                    if (nestCount != 0)                    
-                            tempList.AddLast(token);
-                    nestCount++;
+//                    totalList.Add(new TokenNode());
+//                    nestStack.Push(tempListPtr);
+//                    tempListPtr = totalList.Last();
+
+                    if (nestCounter == 0)
+                    {
+                        totalList.Add(new TokenNode());
+                        tempListPtr = totalList.Last();
+                        nestStack.Push(tempListPtr);
+                    }
+                    else if (nestCounter >= 1)
+                    {
+                        (tempListPtr as TokenNode).children.Add(new TokenNode());
+                        nestStack.Push(tempListPtr);
+                        tempListPtr = (tempListPtr as TokenNode).children.Last();
+                    }
+                    
+                    nestCounter++;
                 }
                 else if (token == ")")
-                {
-                    if (nestCount != 0)                    
-                        tempList.AddLast(token);
-                    
-                    nestCount--;
-                    if (nestCount == 0)
-                    {
-                        results.Add(Tokenize(tempList));
-                        tempList.Clear();
-                    }
+                {   
+                    nestCounter--;
+                    tempListPtr = nestStack.Pop();
                 }
-                else if (nestCount != 0)
-                    tempList.AddLast(token);
-                else 
-                    results.Add(new Token(token));
+                else if (nestCounter != 0)
+                    (tempListPtr as TokenNode).children.Add(new Token(token));
+                else
+                    totalList.Add(new Token(token));
             }
 
-            if (tempList.Count != 0)
-                results.Add(Tokenize(tempList));
-            return results;
+            return totalList;
         }
-        
+
         public static Lexer Instance
         {
             get

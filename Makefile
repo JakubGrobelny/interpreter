@@ -1,5 +1,5 @@
 NAME = interpreter.exe
-FILES = src/*.cs
+FILES = Interpreter/src/*.cs
 
 make:
 	mcs -out:$(NAME) -pkg:dotnet $(FILES) 
