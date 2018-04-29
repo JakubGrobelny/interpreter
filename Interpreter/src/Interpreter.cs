@@ -15,6 +15,7 @@ namespace Interpreter
                 
                 foreach (var expr in list)
                     Console.WriteLine(expr);
+                //    Console.WriteLine(Parser.Instance.ParseExpression(expr));                
             }
             catch (InternalException exc)
             {

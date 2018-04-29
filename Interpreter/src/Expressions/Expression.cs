@@ -5,7 +5,6 @@ namespace Interpreter.Expressions
     public abstract class Expression
     { //TODO: implement Cloneable?
         public abstract Expression Evaluate(Dictionary<Symbol, Expression> env);
-        public abstract string ToString();
     }
 
     public abstract class Value : Expression

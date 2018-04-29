@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 using static System.String;
 
 namespace Interpreter
@@ -10,6 +11,12 @@ namespace Interpreter
             : base(what) {}
     }
 
+    public class DivisionByZero : InternalException
+    {
+        public DivisionByZero(BigInteger a, BigInteger b)
+            : base(Format("Division by zero {0}/{1}!", a, b)) {}
+    }
+    
     public class ArityMismatch : InternalException
     {
         public ArityMismatch(string name, int arity, int received)

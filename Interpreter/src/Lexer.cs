@@ -36,7 +36,7 @@ namespace Interpreter
             }
         }
 
-        private bool IsClosingBrace(char c) => c == ')' || c == ']' ||c == '{';
+        private bool IsClosingBrace(char c) => c == ')' || c == ']' ||c == '}';
 
         private bool IsOpeningBrace(char c) => c == '(' || c == '[' || c == '}';
 
@@ -168,17 +168,10 @@ namespace Interpreter
             var nestCounter = 0;
             var nestStack = new Stack<TokenTree>();
             
-            // Go through the tokens and add a new TokenNode every time
-            // nested brackets are encountered. After nested brackets end
-            // return to the main list and continue appending tokens to it.
             foreach (var token in initiallySplit)
             {
                 if (token == "(")
                 {
-//                    totalList.Add(new TokenNode());
-//                    nestStack.Push(tempListPtr);
-//                    tempListPtr = totalList.Last();
-
                     if (nestCounter == 0)
                     {
                         totalList.Add(new TokenNode());

@@ -53,50 +53,6 @@ namespace Interpreter
             return BigInteger.TryParse(strBuilder.ToString(), out temp);
         }
 
-        private static bool IsComplex(string str)
-        {
-            var strBuilder = new StringBuilder();
-            double temp;
-            var operatorAppeared = false;
-            var imaginaryAppeared = false;
-            
-            foreach (var c in str)
-            {
-                if (c == 'i')
-                {
-                    if (imaginaryAppeared)
-                        return false;
-                    imaginaryAppeared = true;
-                }
-                else if (c == '+' || c == '-')
-                {
-                    if (operatorAppeared)
-                        return false;
-
-                    operatorAppeared = true;
-
-                    if (c == '-')
-                    {
-                        // Skipping first minus.
-                        if (strBuilder.Length == 0)
-                            continue;
-                        
-                        strBuilder.Append(c);
-                    }
-
-                    if (!Double.TryParse(strBuilder.ToString(), out temp))
-                        return false;
-
-                    strBuilder.Clear();
-                }
-                else
-                    strBuilder.Append(c);
-            }
-
-            if (strBuilder.Length == 0) return false;
-            return Double.TryParse(strBuilder.ToString(), out temp);
-        }
-        
         // Tries to parse string into value.
         public static Expression ParseExpression(string expr)
         {
@@ -125,9 +81,6 @@ namespace Interpreter
                 
                 if (IsRational(expr))
                     return new Rational(expr);
-                
-                if (IsComplex(expr))
-                    return new Expressions.Complex(expr);
             }
             
             // Unmatched value is a symbol;

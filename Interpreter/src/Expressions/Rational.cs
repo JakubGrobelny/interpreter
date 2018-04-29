@@ -10,15 +10,23 @@ namespace Interpreter.Expressions
 
         public override string ToString()
         {
-            return numerator.ToString() + "/" + denominator.ToString();
+            return numerator + "/" + denominator;
         }
 
+        private void Normalize()
+        {
+            var gcd = Integer.GCD(numerator, denominator);
+            numerator /= gcd;
+            denominator /= gcd;
+        }
+        
         public Rational(Integer numerator, Integer denominator)
         {
             this.numerator = numerator;
             this.denominator = denominator;
+            Normalize();
         }
-
+        
         public Rational(string str)
         {
             var strBuilder = new StringBuilder();
@@ -35,6 +43,7 @@ namespace Interpreter.Expressions
             }
             
             this.denominator = new Integer(strBuilder.ToString());
+            Normalize();
         }
     }
 }

@@ -4,16 +4,18 @@ namespace Interpreter.Expressions
 {
     public class Class
     {
-        Symbol name;
-        Dictionary<Symbol, Expression> mutableMembers;
-        Dictionary<Symbol, Expression> immutableMembers;
-        Class baseClass;
+        //TODO: redo
+        private Symbol name;
+        private Dictionary<Symbol, Expression> mutableMembers;
+        private Dictionary<Symbol, Expression> immutableMembers;
+        private Class baseClass;
 
         public override string ToString()
         {
             return "#<class:" + name + ">";
         }
 
+        
         public Expression this[Symbol member]
         {
             get
@@ -22,18 +24,16 @@ namespace Interpreter.Expressions
                 {
                     if (!mutableMembers.ContainsKey(member))
                         throw new InvalidMember(ToString(), member.ToString());
-                    else
-                        return mutableMembers[member];
+                    return mutableMembers[member];
                 }
-                else
-                    return immutableMembers[member];
+
+                return immutableMembers[member];
             }
             set
             {
                 if (!mutableMembers.ContainsKey(member))
                     throw new InvalidMember(ToString(), member.ToString());
-                else
-                    mutableMembers[member] = value;
+                mutableMembers[member] = value;
             }
         }
 
