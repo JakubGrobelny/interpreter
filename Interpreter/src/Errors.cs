@@ -16,6 +16,12 @@ namespace Interpreter
         public DivisionByZero(BigInteger a, BigInteger b)
             : base(Format("Division by zero {0}/{1}!", a, b)) {}
     }
+
+    public class InvalidCompoundSymbolElement : InternalException
+    {
+        public InvalidCompoundSymbolElement(string symbol)
+            : base("Invalid compound symbol element " + symbol + "!") {}
+    }
     
     public class ArityMismatch : InternalException
     {

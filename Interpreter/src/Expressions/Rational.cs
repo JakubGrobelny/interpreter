@@ -69,10 +69,7 @@ namespace Interpreter.Expressions
             return new Rational(newNum1 + newNum2, lcm);
         }
         
-        public static Rational Substract(Rational a, Rational b)
-        {
-            return Add(a, -b);
-        }
+        public static Rational Substract(Rational a, Rational b) => Add(a, -b);
 
         public static Rational Multiply(Rational a, Rational b)
         {

@@ -36,6 +36,10 @@ namespace Interpreter
             }
         }
 
+        private bool IsQuoteSymbol(char c) => c == '\'';
+
+        private const string quoteKeyword = "quote";
+        
         private bool IsClosingBrace(char c) => c == ')' || c == ']' ||c == '}';
 
         private bool IsOpeningBrace(char c) => c == '(' || c == '[' || c == '}';
@@ -83,6 +87,13 @@ namespace Interpreter
                 throw new ParenthesisError(stack.Peek());
         }
 
+        private string FilterToken(string token)
+        {
+            if (token == quoteKeyword)
+                return quoteKeyword;
+            return token;
+        }
+        
         private LinkedList<string> SplitIntoTokens(string text)
         {
             CheckBraces(text);
@@ -92,6 +103,9 @@ namespace Interpreter
             var readingString = false;
             var readingComment = false;
             var prev = '\0';
+            
+            var quoteBraceCounter = 0;
+            var quoting = false;
             
             foreach (var c in text)
             {
@@ -111,49 +125,70 @@ namespace Interpreter
                         if (readingString && prev != '\\')
                         {
                             readingString = false;
-                            tokens.AddLast(token.ToString());
+                            tokens.AddLast(FilterToken(token.ToString()));
                             token.Clear();
                         }
                         else if (!readingString)
                             readingString = true;
                     }
-                    else if (c == '\'' && !readingString)
+                    else if (IsQuoteSymbol(c) && !readingString)
                     {
                         if (token.Length != 0)
                         {
-                            tokens.AddLast(token.ToString());
+                            tokens.AddLast(FilterToken(token.ToString()));
                             token.Clear();
                         }
 
+                        tokens.AddLast("(");
                         tokens.AddLast("'");
+                        quoting = true;
                     }
                     else if (IsBrace(c) && !readingString)
                     {
                         if (token.Length != 0)
                         {
-                            tokens.AddLast(token.ToString());
+                            tokens.AddLast(FilterToken(token.ToString()));
                             token.Clear();
                         }
 
                         tokens.AddLast(IsOpeningBrace(c) ? "(" : ")");
+                        
+                        if (IsOpeningBrace(c) && quoting)
+                            quoteBraceCounter++;
+
+                        if (IsClosingBrace(c) && quoting)
+                        {
+                            quoteBraceCounter--;
+                            if (quoteBraceCounter == 0)
+                            {
+                                tokens.AddLast(")");
+                                quoting = false;
+                            }
+                        }
                     }
                     else if (IsWhiteSpace(c) && !readingString)
                     {
                         if (token.Length == 0) 
                             continue;
                         
-                        tokens.AddLast(token.ToString());
+                        tokens.AddLast(FilterToken(token.ToString()));
                         token.Clear();
+
+                        if (quoting && quoteBraceCounter == 0)
+                        {
+                            quoting = false;
+                            tokens.AddLast(")");
+                        }
                     }
                     else
-                        token.Append(c);    
+                        token.Append(c);
                 }
 
                 prev = c;
             }
 
             if (token.Length != 0)
-                tokens.AddLast(token.ToString());
+                tokens.AddLast(FilterToken(token.ToString()));
             
             return tokens;
         }
