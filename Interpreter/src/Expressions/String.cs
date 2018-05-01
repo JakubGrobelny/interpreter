@@ -16,5 +16,7 @@ namespace Interpreter.Expressions
             else
                 this.value = value.Substring(1, value.Length - 2);
         }
+
+        public override object Clone() => new StringLiteral(value);
     }
 }

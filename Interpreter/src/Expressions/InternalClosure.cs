@@ -19,5 +19,7 @@ namespace Interpreter.Expressions
         {
             this.procedure = function;
         }
+
+        public override object Clone() => new InternalClosure(name, procedure);
     }
 }

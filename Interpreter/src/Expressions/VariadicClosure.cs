@@ -36,11 +36,14 @@ namespace Interpreter.Expressions
             // Adding variadic argument to the environment,
             extendedEnvironment[parameters[parameters.Count - 1]] = argList;
 
-            return expression.Evaluate(extendedEnvironment);
+            Expression val = null;
+            foreach (var expr in expression)
+                val = expr.Evaluate(extendedEnvironment);
+            return val;
         }
 
         public VariadicClosure(string name, List <Symbol> parameters,
-            Expression expression, Dictionary<Symbol, Expression> localEnvironment)
+            List<Expression> expression, Dictionary<Symbol, Expression> localEnvironment)
             : base(name, parameters, expression, localEnvironment) {}
     }
 }

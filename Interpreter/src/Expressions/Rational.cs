@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Numerics;
 using System.Text;
 
@@ -112,5 +113,7 @@ namespace Interpreter.Expressions
             this.denominator = den.Length > 0 ? BigInteger.Parse(den) : 1;
             Normalize();
         }
+
+        public override object Clone() => new Rational(numerator, denominator);
     }
 }

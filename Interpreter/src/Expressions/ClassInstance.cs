@@ -32,5 +32,18 @@ namespace Interpreter.Expressions
             for (int i = 0; i < constructor.Count; i++)
                 objectEnvironment[type.ConstructorParameters[i]] = constructor[i];
         }
+
+        private ClassInstance(Symbol className, Dictionary<Symbol, Expression> objEnv)
+        {
+            this.className = className;
+            this.objectEnvironment = objEnv;
+        }
+        
+        public override object Clone()
+        {
+            var name = (Symbol)className.Clone();
+            var objEnv = new Dictionary<Symbol, Expression>(objectEnvironment);
+            return new ClassInstance(name, objEnv);
+        }
     }
 }

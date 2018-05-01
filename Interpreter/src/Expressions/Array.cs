@@ -58,5 +58,12 @@ namespace Interpreter.Expressions
         {
             array = new Expression[size];
         }
+
+        public Array(Expression[] array)
+        {
+            this.array = array;
+        }
+        
+        public override object Clone() => new Array((Expression[])array.Clone());
     }
 }

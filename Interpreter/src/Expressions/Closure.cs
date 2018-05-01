@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Interpreter.Expressions
 {
     public class Closure : Function
     {
         protected List<Symbol> parameters;
-        protected Expression expression;
+        protected List<Expression> expression;
         protected Dictionary<Symbol, Expression> localEnvironment;
 
         public override Expression Call(List<Expression> arguments, Dictionary<Symbol, Expression> env)
@@ -24,7 +26,11 @@ namespace Interpreter.Expressions
             for (int i = 0; i < parameters.Count; i++)
                 extendedEnvironment[parameters[i]] = arguments[i].Evaluate(env);
 
-            return expression.Evaluate(extendedEnvironment);
+            Expression val = null;
+            foreach (var expr in expression)
+                val = expr.Evaluate(extendedEnvironment);
+
+            return val;
         }
 
         public override string ToString()
@@ -33,12 +39,29 @@ namespace Interpreter.Expressions
         }
 
         public Closure(string name, List <Symbol> parameters,
-            Expression expression, Dictionary<Symbol, Expression> localEnvironment) 
+            List<Expression> expression, Dictionary<Symbol, Expression> localEnvironment) 
             : base(name) 
         {
             this.parameters = parameters;
             this.expression = expression;
             this.localEnvironment = localEnvironment;
+        }
+
+        public override object Clone()
+        {
+            var exprClones = new List<Expression>();
+
+            foreach (var expr in expression)
+                exprClones.Append((Expression)expr.Clone());
+
+            var paramClones = new List<Symbol>();
+
+            foreach (var symbol in parameters)
+                paramClones.Append((Symbol)symbol.Clone());
+
+            var envClone = new Dictionary<Symbol, Expression>(localEnvironment);
+
+            return new Closure(name, paramClones, exprClones, envClone);
         }
     }
 }

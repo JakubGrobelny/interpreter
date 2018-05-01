@@ -20,5 +20,7 @@ namespace Interpreter.Expressions
         }
 
         private Null() {}
+
+        public override object Clone() => Instance;
     }
 }

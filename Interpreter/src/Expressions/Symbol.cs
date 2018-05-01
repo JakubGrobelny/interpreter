@@ -18,6 +18,8 @@ namespace Interpreter.Expressions
             }
         }
 
+        public override object Clone() => new Symbol(symbol);
+
         public bool IsThis() => symbol == "this";
         
         public override string ToString()

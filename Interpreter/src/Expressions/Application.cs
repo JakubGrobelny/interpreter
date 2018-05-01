@@ -7,6 +7,11 @@ namespace Interpreter.Expressions
         private readonly Expression procedure;
         private readonly List<Expression> arguments;
 
+        public override object Clone()
+        {
+            throw new System.NotImplementedException("Application cloning!");
+        }
+
         public override Expression Evaluate(Dictionary<Symbol, Expression> env)
         {
             var proc = procedure.Evaluate(env) as Function;

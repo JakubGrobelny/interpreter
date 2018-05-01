@@ -53,5 +53,8 @@ namespace Interpreter.Expressions
             this.first = first;
             this.second = second;
         }
+
+        public override object Clone() => new Pair((Expression)first.Clone(),
+                                                   (Expression)second.Clone());
     }
 }

@@ -11,6 +11,8 @@ namespace Interpreter.Expressions
             return expr;
         }
 
+        public override object Clone() => new Quote((Expression)expr.Clone());
+
         public override string ToString()
         {
             return "'" + expr.ToString();

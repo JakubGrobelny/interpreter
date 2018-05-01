@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 
 namespace Interpreter.Expressions
 {
-    public abstract class Expression
-    { //TODO: implement Cloneable?
+    public abstract class Expression : ICloneable
+    {
+        public abstract object Clone();
+        
         public abstract Expression Evaluate(Dictionary<Symbol, Expression> env);
     }
 

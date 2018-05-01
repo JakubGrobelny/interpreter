@@ -36,5 +36,7 @@ namespace Interpreter.Expressions
         {
             this.value = Double.Parse(str);
         }
+
+        public override object Clone() => new Real(value);
     }
 }

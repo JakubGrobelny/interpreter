@@ -23,5 +23,7 @@ namespace Interpreter.Expressions
         {
             this.value = value;
         }
+
+        public override object Clone() => new Bool(value);
     }
 }

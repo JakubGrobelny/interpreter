@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Interpreter.Expressions
 {
@@ -31,6 +32,16 @@ namespace Interpreter.Expressions
             }
 
             return finalExpr;
+        }
+
+        public override object Clone()
+        {
+            var clones = new List<Expression>();
+
+            foreach (var component in components)
+                clones.Append((Expression)component.Clone());
+
+            return new CompoundSymbol(clones);
         }
 
         public CompoundSymbol(List<Expression> components)
