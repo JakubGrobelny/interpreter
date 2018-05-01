@@ -7,11 +7,10 @@ namespace Interpreter
         public static void Main(string[] args)
         {
             var input = Console.ReadLine();
-            var lexer = Lexer.Instance;
 
             try
             {
-                var list = lexer.Tokenize(input);
+                var list = Lexer.Instance.Tokenize(input);
                 
                 foreach (var expr in list)
                     Console.WriteLine(expr);

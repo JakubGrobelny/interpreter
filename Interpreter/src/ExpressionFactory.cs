@@ -53,6 +53,14 @@ namespace Interpreter
             return BigInteger.TryParse(strBuilder.ToString(), out temp);
         }
 
+//        public static bool IsCompoundSymbol(string str)
+//        {
+//            var hasSeparator = false;
+//            var strBuilder = new StringBuilder();
+//
+//            //TODO: do
+//        }
+        
         // Tries to parse string into value.
         public static Expression ParseExpression(string expr)
         {

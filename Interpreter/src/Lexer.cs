@@ -36,18 +36,31 @@ namespace Interpreter
             }
         }
 
-        private bool IsQuoteSymbol(char c) => c == '\'';
+        private bool IsSpecialSymbol(char c) => c == quoteChar || 
+                                                c == compoundSymbolChar;
 
-        private const string quoteKeyword = "quote";
+        public const string quoteKeyword = "quote";
+
+        public const char quoteChar = '\'';
+        public const char compoundSymbolChar = '$';
+        public const char scopeOperator = '.';
         
-        private bool IsClosingBrace(char c) => c == ')' || c == ']' ||c == '}';
-
-        private bool IsOpeningBrace(char c) => c == '(' || c == '[' || c == '}';
-
-        private bool IsBrace(char c) 
+        private string FilterToken(string token)
         {
-            return IsOpeningBrace(c) || IsClosingBrace(c);
+            if (token == quoteKeyword)
+                return quoteChar.ToString();
+            return token;
         }
+                
+        private bool IsClosingBrace(char c) => c == ')' || 
+                                               c == ']' || 
+                                               c == '}';
+
+        private bool IsOpeningBrace(char c) => c == '(' || 
+                                               c == '[' || 
+                                               c == '{';
+
+        private bool IsBrace(char c) => IsOpeningBrace(c) || IsClosingBrace(c);
 
         private void CheckBraces(string text)
         {
@@ -86,14 +99,8 @@ namespace Interpreter
             if (stack.Count != 0)
                 throw new ParenthesisError(stack.Peek());
         }
-
-        private string FilterToken(string token)
-        {
-            if (token == quoteKeyword)
-                return quoteKeyword;
-            return token;
-        }
         
+        //TODO: make the lexer insert braces around compound symbols
         private LinkedList<string> SplitIntoTokens(string text)
         {
             CheckBraces(text);
@@ -131,7 +138,7 @@ namespace Interpreter
                         else if (!readingString)
                             readingString = true;
                     }
-                    else if (IsQuoteSymbol(c) && !readingString)
+                    else if (IsSpecialSymbol(c) && !readingString)
                     {
                         if (token.Length != 0)
                         {
@@ -140,7 +147,7 @@ namespace Interpreter
                         }
 
                         tokens.AddLast("(");
-                        tokens.AddLast("'");
+                        tokens.AddLast(c.ToString());
                         quoting = true;
                     }
                     else if (IsBrace(c) && !readingString)
@@ -158,13 +165,22 @@ namespace Interpreter
 
                         if (IsClosingBrace(c) && quoting)
                         {
-                            quoteBraceCounter--;
                             if (quoteBraceCounter == 0)
                             {
                                 tokens.AddLast(")");
                                 quoting = false;
                             }
+                            quoteBraceCounter--;
                         }
+                    }
+                    else if (c == scopeOperator)
+                    {
+                        if (token.Length != 0)
+                        {
+                            tokens.AddLast(FilterToken(token.ToString()));
+                            token.Clear();
+                        }
+                        //tokens.AddLast(scopeOperator.ToString());
                     }
                     else if (IsWhiteSpace(c) && !readingString)
                     {
@@ -193,10 +209,13 @@ namespace Interpreter
             return tokens;
         }
 
+        private List<TokenTree> MergeCompoundSymbols(List<TokenTree> tokenTree)
+        {
+            throw new NotImplementedException();
+        }
+        
         public List<TokenTree> Tokenize(string text)
         {
-            // TODO handle quotes ( '«expr» -> (quote «expr) )
-            
             var initiallySplit = SplitIntoTokens(text);
             var totalList = new List<TokenTree>();
             TokenTree tempListPtr = null;
@@ -215,9 +234,9 @@ namespace Interpreter
                     }
                     else if (nestCounter >= 1)
                     {
-                        (tempListPtr as TokenNode).children.Add(new TokenNode());
+                        ((TokenNode)tempListPtr).children.Add(new TokenNode());
                         nestStack.Push(tempListPtr);
-                        tempListPtr = (tempListPtr as TokenNode).children.Last();
+                        tempListPtr = ((TokenNode)tempListPtr).children.Last();
                     }
                     
                     nestCounter++;
@@ -228,7 +247,7 @@ namespace Interpreter
                     tempListPtr = nestStack.Pop();
                 }
                 else if (nestCounter != 0)
-                    (tempListPtr as TokenNode).children.Add(new Token(token));
+                    ((TokenNode)tempListPtr).children.Add(new Token(token));
                 else
                     totalList.Add(new Token(token));
             }

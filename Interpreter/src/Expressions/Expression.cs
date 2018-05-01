@@ -29,7 +29,7 @@ namespace Interpreter.Expressions
         public static Number operator+(Number a, Number b)
         {
             if (a is Rational && b is Rational)
-                return Rational.Add((a as Rational), (b as Rational));
+                return Rational.Add(((Rational)a), ((Rational)b));
             else
             {
                 return new Real((double)a + (double)b);
@@ -39,7 +39,7 @@ namespace Interpreter.Expressions
         public static Number operator-(Number a, Number b)
         {
             if (a is Rational && b is Rational)
-                return Rational.Substract((a as Rational), (b as Rational));
+                return Rational.Substract(((Rational)a), ((Rational)b));
             else
             {
                 return new Real((double)a - (double)b);
@@ -50,7 +50,7 @@ namespace Interpreter.Expressions
         public static Number operator*(Number a, Number b)
         {
             if (a is Rational && b is Rational)
-                return Rational.Multiply((a as Rational), (b as Rational));
+                return Rational.Multiply(((Rational)a), ((Rational)b));
             else
             {
                 return new Real((double)a * (double)b);
@@ -61,7 +61,7 @@ namespace Interpreter.Expressions
         public static Number operator/(Number a, Number b)
         {
             if (a is Rational && b is Rational)
-                return Rational.Divide((a as Rational), (b as Rational));
+                return Rational.Divide(((Rational)a), ((Rational)b));
             else
             {
                 return new Real((double)a / (double)b);
