@@ -19,15 +19,31 @@ namespace Interpreter.Expressions
             return result + array[array.Length - 1].ToString() +  "]";
         }
 
-        public Expression this[int key]
-        {
+        public Expression this[Rational i]
+        {            
             get
             {
-                if (key > array.Length)
+                if (i.Denominator != 1 && i.Numerator != 0)
+                    throw new InvalidArrayIndex(i.ToString());
+
+                var key = (int)i.Numerator;
+                
+                if (key >= array.Length)
                     throw new ArrayIndexOutOfBounds(key, array.Length);
                 return array[key];
             }
-            set => array[key] = value;
+            set
+            {
+                if (i.Denominator != 1 && i.Numerator != 0)
+                    throw new InvalidArrayIndex(i.ToString());
+
+                var key = (int)i.Numerator;
+
+                if (key >= array.Length)
+                    throw new ArrayIndexOutOfBounds(key, array.Length);
+                
+                array[key] = value;
+            }
         }
 
         public Array (int size, Expression val)

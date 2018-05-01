@@ -52,17 +52,9 @@ namespace Interpreter
             if (strBuilder.Length == 0) return false;
             return BigInteger.TryParse(strBuilder.ToString(), out temp);
         }
-
-//        public static bool IsCompoundSymbol(string str)
-//        {
-//            var hasSeparator = false;
-//            var strBuilder = new StringBuilder();
-//
-//            //TODO: do
-//        }
         
         // Tries to parse string into value.
-        public static Expression ParseExpression(string expr)
+        public static Expression ParseValue(string expr)
         {
             if (expr.Length == 0)
                 throw new UnhandledLexerException("ParseExpression: empty string!");

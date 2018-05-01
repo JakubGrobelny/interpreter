@@ -100,7 +100,6 @@ namespace Interpreter
                 throw new ParenthesisError(stack.Peek());
         }
         
-        //TODO: make the lexer insert braces around compound symbols
         private LinkedList<string> SplitIntoTokens(string text)
         {
             CheckBraces(text);
@@ -175,6 +174,9 @@ namespace Interpreter
                     }
                     else if (c == scopeOperator)
                     {
+                        if (!quoting)
+                            throw new InvalidUseOfScopeOperator(text);
+                        
                         if (token.Length != 0)
                         {
                             tokens.AddLast(FilterToken(token.ToString()));
@@ -209,11 +211,6 @@ namespace Interpreter
             return tokens;
         }
 
-        private List<TokenTree> MergeCompoundSymbols(List<TokenTree> tokenTree)
-        {
-            throw new NotImplementedException();
-        }
-        
         public List<TokenTree> Tokenize(string text)
         {
             var initiallySplit = SplitIntoTokens(text);

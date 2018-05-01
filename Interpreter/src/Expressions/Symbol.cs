@@ -17,6 +17,8 @@ namespace Interpreter.Expressions
                 throw new UnboundVariable(ToString());
             }
         }
+
+        public bool IsThis() => symbol == "this";
         
         public override string ToString()
         {

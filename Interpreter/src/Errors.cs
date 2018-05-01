@@ -11,12 +11,31 @@ namespace Interpreter
             : base(what) {}
     }
 
+    public class InvalidClassInstantiation : InternalException
+    {
+        public InvalidClassInstantiation(string name)
+            : base("Invalid instantiation of class " + name + "!") {}
+    }
+    
+    public class InvalidArrayIndex : InternalException
+    {
+        public InvalidArrayIndex(string a)
+            : base("Invalid array index " + a + "!") {}
+    }
+    
     public class DivisionByZero : InternalException
     {
         public DivisionByZero(BigInteger a, BigInteger b)
             : base(Format("Division by zero {0}/{1}!", a, b)) {}
     }
 
+    public class InvalidUseOfScopeOperator : InternalException
+    {
+        public InvalidUseOfScopeOperator(string expr)
+            : base("Invalid use of scope generator in " + expr + 
+                   "!\nDid you forget to put '$' at the beginning?") {}
+    }
+    
     public class InvalidCompoundSymbolElement : InternalException
     {
         public InvalidCompoundSymbolElement(string symbol)

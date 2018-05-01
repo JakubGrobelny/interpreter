@@ -23,7 +23,7 @@ namespace Interpreter
         public Expression ParseExpression(TokenTree expression)
         {
             if (expression is Token)
-                return ExpressionFactory.ParseExpression(expression.ToString());
+                return ExpressionFactory.ParseValue(expression.ToString());
             else
             {
                 TokenNode expr = expression as TokenNode;
