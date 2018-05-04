@@ -9,7 +9,7 @@ namespace Interpreter.Expressions
         
         public override string ToString() => "#<instance-of:" + className + ">";
         
-        public Expression GetMember(Symbol memberName)
+        public Expression GetMember(Symbol memberName, Dictionary<Symbol, Expression> env)
         {
             if (memberName.IsThis())
                 return this;
@@ -17,7 +17,12 @@ namespace Interpreter.Expressions
             if (!objectEnvironment.ContainsKey(memberName))
                 throw new InvalidMember(ToString(), memberName.ToString());
 
-            return objectEnvironment[memberName];
+            var extendedEnv = new Dictionary<Symbol, Expression>(env);
+            
+            foreach (var definition in objectEnvironment)
+                extendedEnv[definition.Key] = definition.Value;
+            
+            return objectEnvironment[memberName].Evaluate(extendedEnv);
         }
 
         public ClassInstance(Class type, List<Expression> constructor)

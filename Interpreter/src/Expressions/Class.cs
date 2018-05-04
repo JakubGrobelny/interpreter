@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Interpreter.Expressions
 {
-    public class Class
+    public class Class : Expression
     {
         private Symbol name;
         private Dictionary<Symbol, Expression> members;
@@ -21,6 +21,17 @@ namespace Interpreter.Expressions
             this.name = name;
             this.members = members;
             this.constructorParameters = constructorParameters;
+        }
+    
+        //TODO
+        public override object Clone()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Expression Evaluate(Dictionary<Symbol, Expression> env)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

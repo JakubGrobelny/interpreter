@@ -26,7 +26,7 @@ namespace Interpreter.Expressions
                 if (finalExpr is Array && symbol is Rational index)
                     finalExpr = ((Array)finalExpr)[index].Evaluate(env);
                 else if (finalExpr is ClassInstance && symbol is Symbol sym)
-                    finalExpr = ((ClassInstance)finalExpr).GetMember(sym).Evaluate(env);
+                    finalExpr = ((ClassInstance)finalExpr).GetMember(sym, env);
                 else
                     throw new InvalidCompoundSymbolElement(symbol.ToString());
             }

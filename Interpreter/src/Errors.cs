@@ -22,6 +22,12 @@ namespace Interpreter
         public InvalidArrayIndex(string a)
             : base("Invalid array index " + a + "!") {}
     }
+
+    public class InvalidArraySize : InternalException
+    {
+        public InvalidArraySize(string a)
+            : base("Invalid array size " + a + "!") {}
+    }
     
     public class DivisionByZero : InternalException
     {

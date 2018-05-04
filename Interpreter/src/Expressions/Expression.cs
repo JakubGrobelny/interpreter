@@ -18,8 +18,14 @@ namespace Interpreter.Expressions
         }
     }
 
-    public abstract class Combination : Expression {}
+    public abstract class Combination : Expression
+    {        
+        //TODO: probably implement cloning for real.
+        public override object Clone() => this;
+    }
 
+    public abstract class SpecialForm : Combination {}
+    
     public abstract class Number : Value
     {
         protected abstract double ToDouble();
