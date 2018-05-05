@@ -11,37 +11,40 @@ namespace Interpreter
 
         public static void Main(string[] args)
         {
-            var input = Console.ReadLine();
+            var globalEnv = InitGlobalEnv();
 
-            try
+            while (!quit)
             {
-                var list = Lexer.Instance.Tokenize(input);
-                
-                var globalEnv = InitGlobalEnv();
-                
-                //TODO: replace this temporary loop with read-eval-write loop
-                //TODO: while not quit
-                foreach (var expr in list)
+                try
                 {
-                    var expression = Parser.Instance.ParseExpression(expr);
-                    var value = expression.Evaluate(globalEnv);
-                    if (!(value is Void))
-                        Console.WriteLine(value.ToString());
+                    Console.Write("|=> ");
+
+                    var input = Console.ReadLine();
+                    var list = Lexer.Instance.Tokenize(input);
+
+                    foreach (var expr in list)
+                    {
+                        var expression = Parser.Instance.ParseExpression(expr);
+                        var value = expression.Evaluate(globalEnv);
+                        if (!(value is Void))
+                            Console.WriteLine(value.ToString());
+                    }
                 }
-                //    Console.WriteLine(Parser.Instance.ParseExpression(expr));                
+                catch (InternalException exc)
+                {
+                    Console.WriteLine("Error!: " + exc.Message);
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine("Interpreter error!\n" +
+                                      "If this has happened then you should " +
+                                      "report the bug.\n" + exc);
+                }
+
             }
-            catch (InternalException exc)
-            {
-                Console.WriteLine("Error!: " + exc.Message);
-            }
-            catch (Exception exc)
-            {
-                Console.WriteLine("Interpreter error!\n" +
-                                  "If this has happened then you should " +
-                                  "report the bug.\n" + exc);                
-            }
-            
-            Console.ReadKey();
+
+
+            //Console.ReadKey();
         }
 
         // Default built-in values in environment.
@@ -174,6 +177,19 @@ namespace Interpreter
                         throw new InvalidArgument("=", arguments[1].ToString());
 
                     return new Bool(num1 == num2);
+                });
+
+            env[new Symbol("print")] = new InternalClosure("print",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("print", 1, arguments.Count);
+
+                    if (!(arguments[0] is StringLiteral str))
+                        throw new InvalidArgument("print", arguments[0].ToString());
+
+                    Console.Write(str.Value);
+                    return Void.Instance;
                 });
 
             return env;

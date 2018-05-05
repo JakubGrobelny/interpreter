@@ -6,6 +6,8 @@ namespace Interpreter.Expressions
     {
         private string value;
 
+        public string Value => value;
+
         public override string ToString()
         {
             return "\"" + value + "\"";
