@@ -32,12 +32,24 @@ namespace Interpreter.Expressions
     public abstract class Number : Value
     {
         protected abstract double ToDouble();
-        
+
         public static explicit operator double(Number num)
         {
             return num.ToDouble();
         }
-        
+
+        public static bool operator==(Number a, Number b)
+        {
+            if (a is Rational && b is Rational)
+                return Rational.AreEqual((Rational)a, (Rational)b);
+            return (Double)a ==  (Double)b;
+        }
+
+        public static bool operator!=(Number a, Number b)
+        {
+            return !(a == b);
+        }
+
         public static Number operator+(Number a, Number b)
         {
             if (a is Rational && b is Rational)

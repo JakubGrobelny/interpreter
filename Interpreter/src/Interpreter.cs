@@ -158,6 +158,24 @@ namespace Interpreter
                     return Void.Instance;
                 });
 
+            // Compares two numbers (use eq? for everything else)
+            env[new Symbol("=")] = new InternalClosure("=",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 2)
+                        throw new ArityMismatch("=", 2, arguments.Count);
+
+                    var num1expr = arguments[0].Evaluate(environment);
+                    var num2expr = arguments[1].Evaluate(environment);
+
+                    if (!(num1expr is Number num1))
+                        throw new InvalidArgument("=", arguments[0].ToString());
+                    if (!(num2expr is Number num2))
+                        throw new InvalidArgument("=", arguments[1].ToString());
+
+                    return new Bool(num1 == num2);
+                });
+
             return env;
         }
     }

@@ -69,6 +69,9 @@ namespace Interpreter.Expressions
             }
         }
 
+        public static bool AreEqual(Rational a, Rational b)
+            => a.Denominator == b.Denominator && a.Numerator == b.Numerator;
+
         public static Rational operator-(Rational a)
         {
             return new Rational(-a.Numerator, a.Denominator);
