@@ -42,6 +42,9 @@ namespace Interpreter.Expressions
         
         private void Normalize()
         {
+            if (denominator == 0)
+                throw new DivisionByZero(numerator, denominator);
+            
             var gcd = GCD(numerator, denominator);
             
             if (gcd != 0)

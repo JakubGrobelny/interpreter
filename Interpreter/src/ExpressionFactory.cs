@@ -13,9 +13,9 @@ namespace Interpreter
     {
         private static bool IsBool(string str) => (str == "#f" || str == "#t");
 
-        private static bool IsVoid(string str) => str == "#<void>";
+        private static bool IsVoid(string str) => str == "#v";
 
-        private static bool IsNull(string str) => str == "#<null>";
+        private static bool IsNull(string str) => str == "#n";
 
         private static bool IsString(string str)
         {

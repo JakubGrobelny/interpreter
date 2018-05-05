@@ -3,7 +3,7 @@ namespace Interpreter.Expressions
     public class Null : Value
     {
         private static Null instance = null;
-		
+
         public static Null Instance
         {
             get

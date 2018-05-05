@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Interpreter.Expressions;
+using Void = Interpreter.Expressions.Void;
 
 namespace Interpreter
 {
@@ -21,7 +22,8 @@ namespace Interpreter
                 foreach (var expr in list)
                 {
                     var expression = Parser.Instance.ParseExpression(expr);
-                    Console.WriteLine(expression.Evaluate(globalEnv).ToString());
+                    if (!(expression is Void))
+                        Console.WriteLine(expression.Evaluate(globalEnv).ToString());
                 }
                 //    Console.WriteLine(Parser.Instance.ParseExpression(expr));                
             }

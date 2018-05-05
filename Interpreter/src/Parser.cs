@@ -25,7 +25,7 @@ namespace Interpreter
                 return ExpressionFactory.ParseValue(expression.ToString());
             else
             {
-                var list = (expression as TokenNode).children;
+                var list = ((TokenNode)expression).children;
 
                 if (list.Count == 0)
                     throw new InvalidEmptyExpression();
@@ -141,13 +141,21 @@ namespace Interpreter
 
                             return new Cond(clauses);
                         }
+                        case "let":
+                        {
+                            throw new NotImplementedException("let");                            
+                        }
+                        case "let*":
+                        {
+                            throw new NotImplementedException("let*");                            
+                        }
                         case "defclass":
                         {
-                            throw new NotImplementedException();
+                            throw new NotImplementedException("defclass");
                         }
                         case "defarray":
                         {
-                            throw new NotImplementedException();                            
+                            throw new NotImplementedException("defarray");
                         }
                         case "lambda*":
                         case "lambda":
@@ -186,7 +194,6 @@ namespace Interpreter
                             else
                                 return new VariadicLambda(paramList, expressions);
                         }
-                        //TODO: let, let*
                     }
                 }
                 // function application
