@@ -13,6 +13,11 @@ namespace Interpreter.Expressions
             return "\"" + value + "\"";
         }
 
+        public StringLiteral(char c)
+        {
+            this.value = c.ToString();
+        }
+
         public StringLiteral(string value)
         {
             if (value.Length == 2)

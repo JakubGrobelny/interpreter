@@ -43,6 +43,7 @@ namespace Interpreter
                 catch (InternalException exc)
                 {
                     Console.WriteLine("Error!: " + exc.Message);
+                    input = "";
                 }
                 catch (Exception exc)
                 {
@@ -311,6 +312,37 @@ namespace Interpreter
                         throw new InvalidArgument("=", arguments[1].ToString());
 
                     return new Bool((double) num1 > (double) num2);
+                });
+
+            env[new Symbol("string->list")] = new InternalClosure("string->list",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("string->list", 1, arguments.Count);
+
+                    var str = (StringLiteral)arguments[0].Evaluate(environment);
+                    if (str == null)
+                        throw new InvalidArgument("string->list", arguments[0].Evaluate(environment).ToString());
+
+                    var list = new List<Expression>();
+
+                    foreach (var c in str.Value)
+                        list.Add(new StringLiteral(c));
+
+                    return Pair.CreateList(list);
+                });
+
+            env[new Symbol("string->symbol")] = new InternalClosure("string->symbol",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("string->symbol", 1, arguments.Count);
+
+                    var str = (StringLiteral)arguments[0].Evaluate(environment);
+                    if (str == null)
+                        throw new InvalidArgument("string->symbol", arguments[0].Evaluate(environment).ToString());
+
+                    return new Symbol(str.Value);
                 });
 
             return env;
