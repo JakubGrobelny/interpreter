@@ -2,3 +2,6 @@
 2. type hinting
 3. pattern matching
 4. static class members
+
+variadic functions with ','
+

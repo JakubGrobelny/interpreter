@@ -6,7 +6,7 @@ namespace Interpreter.Expressions
 {
     public class ClassDefinition : SpecialForm
     {
-        public string Keyword => "defclass";
+        public override string Keyword => "defclass";
         
         private Symbol envObjectName;
         private Class definedClass;

@@ -5,6 +5,9 @@ namespace Interpreter.Expressions
 {
     public abstract class Expression : ICloneable
     {
+        public static explicit operator bool(Expression expr) =>
+            !(expr is Bool) || (expr as Bool).GetValue();
+        
         public abstract object Clone();
         
         public abstract Expression Evaluate(Dictionary<Symbol, Expression> env);
@@ -24,7 +27,10 @@ namespace Interpreter.Expressions
         public override object Clone() => this;
     }
 
-    public abstract class SpecialForm : Combination {}
+    public abstract class SpecialForm : Combination
+    {
+        public abstract string Keyword { get; }
+    }
     
     public abstract class Number : Value
     {

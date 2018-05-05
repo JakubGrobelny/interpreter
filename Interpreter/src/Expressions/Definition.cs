@@ -4,7 +4,7 @@ namespace Interpreter.Expressions
 {
     public class Definition : SpecialForm
     {
-        public string Keyword => "def";
+        public override string Keyword => "def";
 
         private Symbol symbol;
         private Expression expression;

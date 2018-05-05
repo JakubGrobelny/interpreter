@@ -10,6 +10,8 @@ namespace Interpreter.Expressions
         private List<Expression> values;
         private bool fill;
 
+        public override string Keyword => "defarray";
+
         public override string ToString()
         {
             throw new System.NotImplementedException();
@@ -68,5 +70,6 @@ namespace Interpreter.Expressions
 
         public ArrayDefinition(Symbol name, Rational size)
             : this(name, size, Void.Instance) {}
+
     }
 }
