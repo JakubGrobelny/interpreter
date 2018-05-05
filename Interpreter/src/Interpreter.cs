@@ -14,6 +14,7 @@ namespace Interpreter
             {
                 var list = Lexer.Instance.Tokenize(input);
                 
+                //TODO: add else to environment (def else #t)
                 var globalEnv = new Dictionary<Symbol, Expression>();
                 
                 //TODO: replace this temporary loop with read-eval-write loop
