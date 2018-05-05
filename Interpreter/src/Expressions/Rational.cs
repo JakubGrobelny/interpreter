@@ -105,7 +105,13 @@ namespace Interpreter.Expressions
             this.denominator = denominator;
             Normalize();
         }
-        
+
+        public Rational(int val)
+        {
+            this.numerator = val;
+            this.denominator = 1;
+        }
+
         public Rational(string str)
         {
             var strBuilder = new StringBuilder();

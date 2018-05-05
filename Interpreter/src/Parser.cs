@@ -143,7 +143,7 @@ namespace Interpreter
                         case "lambda*":
                         case "lambda":
                         {
-                            if (list.Count != 3)
+                            if (list.Count < 3)
                                 throw new SpecialFormArityMismatch(keyword.token,
                                                                    3,
                                                                    list.Count);
@@ -164,14 +164,10 @@ namespace Interpreter
                             }
 
                             var expressions = new List<Expression>();
-                            if (list[2] is Token singleExpression)
-                                expressions.Add(ParseExpression(singleExpression));
-                            else if (list[2] is TokenNode multipleExpressions)
-                            {
-                                foreach (var expr in multipleExpressions.children)
-                                    expressions.Add(ParseExpression(expr));
-                            }
-                            
+
+                            for (int i = 2; i < list.Count; i++)
+                                expressions.Add(ParseExpression(list[i]));
+
                             if (keyword.token == "lambda")
                                 return new Lambda(paramList, expressions);
                             if (paramList.Count != 0)

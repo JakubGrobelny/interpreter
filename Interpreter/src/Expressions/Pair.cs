@@ -31,9 +31,24 @@ namespace Interpreter.Expressions
             return result;
         }
 
-        public override string ToString()
+        public override string ToString() => "(" + ToStringHelper() + ")";
+
+        public static List<Expression> CastToList(Expression list)
         {
-            return "(" + ToStringHelper() + ")";
+            if (!IsList(list))
+                return null;
+
+            var ls = new List<Expression>();
+            var ptr = list;
+
+            while (!(ptr is Null))
+            {
+                var pair = (Pair) ptr;
+                ls.Add(pair.First);
+                ptr = pair.second;
+            }
+
+            return ls;
         }
 
         public static Value CreateList(List<Expression> elements)

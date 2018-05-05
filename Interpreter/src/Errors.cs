@@ -70,6 +70,12 @@ namespace Interpreter
                                   name, arity, received)) {}
     }
 
+    public class InvalidArgument : InternalException
+    {
+        public InvalidArgument(string function, string arg)
+            : base("Illegal argument " + arg + " for " + function + "!") {}
+    }
+
     public class ApplicationNotAProcedure : InternalException
     {
         public ApplicationNotAProcedure(string application) 

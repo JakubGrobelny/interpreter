@@ -26,7 +26,7 @@ namespace Interpreter.Expressions
             for (int i = 0; i < parameters.Count; i++)
                 extendedEnvironment[parameters[i]] = arguments[i].Evaluate(env);
 
-            Expression val = null;
+            Expression val = Void.Instance;
             foreach (var expr in expression)
                 val = expr.Evaluate(extendedEnvironment);
 
