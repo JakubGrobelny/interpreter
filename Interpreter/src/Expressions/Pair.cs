@@ -31,7 +31,13 @@ namespace Interpreter.Expressions
             return result;
         }
 
-        public override string ToString() => "(" + ToStringHelper() + ")";
+        public override string ToString()
+        {
+            if (!IsList(this))
+                return "(" + first + " . " + second + ")";
+            else
+                return "(" + ToStringHelper() + ")";
+        }
 
         public static List<Expression> CastToList(Expression list)
         {
@@ -73,7 +79,7 @@ namespace Interpreter.Expressions
                 return new Bool(true);
             return new Bool(false);
         }
-        
+
         public Pair(Expression first, Expression second)
         {
             this.first = first;

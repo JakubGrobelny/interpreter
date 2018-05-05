@@ -12,15 +12,25 @@ namespace Interpreter
         public static void Main(string[] args)
         {
             var globalEnv = InitGlobalEnv();
+            var input = "";
+            List<TokenTree> list;
 
             while (!quit)
             {
                 try
                 {
-                    Console.Write("|=> ");
+                    if (input == "")
+                        Console.Write("|=> ");
+                    else
+                        Console.Write("    ");
 
-                    var input = Console.ReadLine();
-                    var list = Lexer.Instance.Tokenize(input);
+                    input += Console.ReadLine();
+
+                    if (!Lexer.Instance.IsComplete(input))
+                        continue;
+
+                    list = Lexer.Instance.Tokenize(input);
+                    input = "";
 
                     foreach (var expr in list)
                     {
@@ -36,7 +46,7 @@ namespace Interpreter
                 }
                 catch (Exception exc)
                 {
-                    Console.WriteLine("Interpreter error!\n" +
+                    Console.WriteLine("CRITICAL ERROR!\n" +
                                       "If this has happened then you should " +
                                       "report the bug.\n" + exc);
                 }
@@ -190,6 +200,117 @@ namespace Interpreter
 
                     Console.Write(str.Value);
                     return Void.Instance;
+                });
+
+            env[new Symbol("expt")] = new InternalClosure("expt",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 2)
+                        throw new ArityMismatch("expt", 2, arguments.Count);
+
+                    var num1expr = arguments[0].Evaluate(environment);
+                    var num2expr = arguments[1].Evaluate(environment);
+
+                    if (!(num1expr is Number num1))
+                        throw new InvalidArgument("=", arguments[0].ToString());
+                    if (!(num2expr is Number num2))
+                        throw new InvalidArgument("=", arguments[1].ToString());
+
+                    return new Real(Math.Pow((double) num1, (double) num2));
+                });
+
+            env[new Symbol("clear")] = new InternalClosure("clear",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 0)
+                        throw new ArityMismatch("clear", 0, arguments.Count);
+                    Console.Clear();
+                    return Void.Instance;
+                });
+
+            env[new Symbol("list")] = new InternalClosure("list",
+                (arguments, environment) =>
+                {
+                    var evaluatedList = new List<Expression>();
+                    foreach (var arg in arguments)
+                        evaluatedList.Add(arg.Evaluate(environment));
+
+                    return Pair.CreateList(evaluatedList);
+                });
+
+            env[new Symbol("cdr")] = new InternalClosure("cdr",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("cdr", 1, arguments.Count);
+
+                    var arg = arguments[0].Evaluate(environment);
+
+                    if (!(arg is Pair pair))
+                        throw new InvalidArgument("cdr", arg.ToString());
+
+                    return pair.Second;
+                });
+
+            env[new Symbol("car")] = new InternalClosure("car",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("car", 1, arguments.Count);
+
+                    var arg = arguments[0].Evaluate(environment);
+
+                    if (!(arg is Pair pair))
+                        throw new InvalidArgument("car", arg.ToString());
+
+                    return pair.First;
+                });
+
+            env[new Symbol("null?")] = new InternalClosure("null?",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("null?", 1, arguments.Count);
+
+                    return new Bool(arguments[0].Evaluate(environment) is Null);
+                });
+
+            env[new Symbol("pair?")] = new InternalClosure("pair?",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("pair?", 1, arguments.Count);
+
+                    return new Bool(arguments[0].Evaluate(environment) is Pair);
+                });
+
+            env[new Symbol("cons")] = new InternalClosure("cons",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 2)
+                        throw new ArityMismatch("cons", 2, arguments.Count);
+
+                    var car = arguments[0].Evaluate(environment);
+                    var cdr = arguments[1].Evaluate(environment);
+
+                    return new Pair(car, cdr);
+                });
+
+            env[new Symbol(">")] = new InternalClosure(">",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 2)
+                        throw new ArityMismatch(">", 2, arguments.Count);
+
+                    var num1expr = arguments[0].Evaluate(environment);
+                    var num2expr = arguments[1].Evaluate(environment);
+
+                    if (!(num1expr is Number num1))
+                        throw new InvalidArgument("=", arguments[0].ToString());
+                    if (!(num2expr is Number num2))
+                        throw new InvalidArgument("=", arguments[1].ToString());
+
+                    return new Bool((double) num1 > (double) num2);
                 });
 
             return env;

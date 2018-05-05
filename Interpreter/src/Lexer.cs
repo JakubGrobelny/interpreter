@@ -58,6 +58,21 @@ namespace Interpreter
 
         private bool IsBrace(char c) => IsOpeningBrace(c) || IsClosingBrace(c);
 
+        public bool IsComplete(string text)
+        {
+            int bracketCnt = 0;
+
+            foreach (var c in text)
+            {
+                if (IsOpeningBrace(c))
+                    bracketCnt++;
+                if (IsClosingBrace(c))
+                    bracketCnt--;
+            }
+
+            return bracketCnt == 0;
+        }
+
         private void CheckBraces(string text)
         {
             var stack = new Stack<char>();
