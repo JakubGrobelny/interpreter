@@ -62,10 +62,11 @@ namespace Interpreter
         {
             var stack = new Stack<char>();
             var readingString = false;
-            
+            char prev = '\0';
+
             foreach (var c in text)
             {
-                if (c == '"')
+                if (c == '"' && prev != '\\')
                 {
                     if (readingString)
                     {
@@ -90,6 +91,11 @@ namespace Interpreter
                         throw new ParenthesisError(c);
                     stack.Pop();
                 }
+
+                if (prev == '\\' && c == '\\')
+                    prev = '\0';
+                else
+                    prev = c;
             }
             
             if (stack.Count != 0)
@@ -130,7 +136,7 @@ namespace Interpreter
                             tokens.AddLast(FilterToken(token.ToString()));
                             token.Clear();
                         }
-                        else if (!readingString)
+                        else if (!readingString && prev != '\\')
                             readingString = true;
                     }
                     else if (IsSpecialSymbol(c) && !readingString)
@@ -170,15 +176,11 @@ namespace Interpreter
                     }
                     else if (c == scopeOperator && quoting)
                     {
-//                        if (!quoting)
-//                            throw new InvalidUseOfScopeOperator(text);
-                        
                         if (token.Length != 0)
                         {
                             tokens.AddLast(FilterToken(token.ToString()));
                             token.Clear();
                         }
-                        //tokens.AddLast(scopeOperator.ToString());
                     }
                     else if (IsWhiteSpace(c) && !readingString)
                     {
@@ -194,8 +196,10 @@ namespace Interpreter
                             tokens.AddLast(")");
                         }
                     }
-                    else
+                    else if (c != '\\' || prev == '\\') // I have no clue why this works anymore. DO NOT CHANGE.
                         token.Append(c);
+                    else
+                        token.Append('\\');
                 }
 
                 prev = c;

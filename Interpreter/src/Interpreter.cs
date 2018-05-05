@@ -7,6 +7,8 @@ namespace Interpreter
 {
     public static class Interpreter
     {
+        private static bool quit = false;
+
         public static void Main(string[] args)
         {
             var input = Console.ReadLine();
@@ -18,6 +20,7 @@ namespace Interpreter
                 var globalEnv = InitGlobalEnv();
                 
                 //TODO: replace this temporary loop with read-eval-write loop
+                //TODO: while not quit
                 foreach (var expr in list)
                 {
                     var expression = Parser.Instance.ParseExpression(expr);
@@ -129,6 +132,7 @@ namespace Interpreter
 
                 });
 
+            // Applies function to the arguments from the list.
             //TODO: test it when i have lists implemented
             env[new Symbol("apply")] = new InternalClosure("apply",
                 (arguments, environment) =>
@@ -144,6 +148,14 @@ namespace Interpreter
                     var argsList = Pair.CastToList(args);
 
                     return fun.Call(argsList, environment);
+                });
+
+            // Used for exiting the program.
+            env[new Symbol("exit")] = new InternalClosure("exit",
+                (arguments, environment) =>
+                {
+                    quit = true;
+                    return Void.Instance;
                 });
 
             return env;
