@@ -102,17 +102,31 @@ namespace Interpreter
             env[new Symbol("/")] = new InternalClosure("/",
                 (arguments, environment) =>
                 {
-                    Number quot = new Rational(1);
+                    if (arguments.Count == 0)
+                        throw new ArityMismatch("/", 1, 0);
 
-                    foreach (var expr in arguments)
+                    var first = arguments[0].Evaluate(environment);
+                    if (!(first is Number quot))
+                        throw new InvalidArgument("/", first.Evaluate(environment).ToString());
+
+                    // (/ <arg>) === 1/<arg>
+                    if (arguments.Count == 1)
                     {
-                        var number = expr.Evaluate(environment);
+                        var result = new Rational(1);
+                        return result / quot;
+                    }
+                    // Else the result is first arg divided by rest of them
+
+                    for (int i = 1; i < arguments.Count; i++)
+                    {
+                        var number = arguments[i].Evaluate(environment);
                         if (!(number is Number num))
                             throw new InvalidArgument("/", number.ToString());
                         quot = quot / num;
                     }
 
                     return quot;
+
                 });
 
             //TODO: test it when i have lists implemented
