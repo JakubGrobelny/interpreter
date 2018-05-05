@@ -9,9 +9,7 @@ namespace Interpreter.Expressions
         private Expression size;
         private List<Expression> values;
         private bool fill;
-
-        public override string Keyword => "defarray";
-
+        
         public override string ToString()
         {
             throw new System.NotImplementedException();

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Interpreter.Expressions;
 
 namespace Interpreter
 {
@@ -12,8 +14,14 @@ namespace Interpreter
             {
                 var list = Lexer.Instance.Tokenize(input);
                 
+                var globalEnv = new Dictionary<Symbol, Expression>();
+                
+                //TODO: replace this temporary loop with read-eval-write loop
                 foreach (var expr in list)
-                    Console.WriteLine(expr);
+                {
+                    var expression = Parser.Instance.ParseExpression(expr);
+                    Console.WriteLine(expression.Evaluate(globalEnv).ToString());
+                }
                 //    Console.WriteLine(Parser.Instance.ParseExpression(expr));                
             }
             catch (InternalException exc)

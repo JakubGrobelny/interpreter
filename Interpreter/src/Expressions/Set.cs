@@ -7,8 +7,6 @@ namespace Interpreter.Expressions
     {
         private Symbol variable;
         private Expression value;
-        
-        public override string Keyword { get; }
 
         public override string ToString()
         {

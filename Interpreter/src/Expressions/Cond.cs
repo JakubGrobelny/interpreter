@@ -5,8 +5,6 @@ namespace Interpreter.Expressions
     public class Cond : SpecialForm
     {
         private List<List<Expression>> clauses;
-        
-        public override string Keyword => "cond";
 
         public override string ToString()
         {

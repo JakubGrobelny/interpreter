@@ -5,8 +5,6 @@ namespace Interpreter.Expressions
     public class Or : SpecialForm
     {
         private List<Expression> expressions;
-        
-        public override string Keyword => "or";
 
         public override string ToString()
         {

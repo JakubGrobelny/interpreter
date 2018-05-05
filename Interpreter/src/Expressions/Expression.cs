@@ -27,10 +27,7 @@ namespace Interpreter.Expressions
         public override object Clone() => this;
     }
 
-    public abstract class SpecialForm : Combination
-    {
-        public abstract string Keyword { get; }
-    }
+    public abstract class SpecialForm : Combination {}
     
     public abstract class Number : Value
     {

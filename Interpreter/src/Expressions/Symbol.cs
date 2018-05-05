@@ -5,6 +5,19 @@ namespace Interpreter.Expressions
     public class Symbol : Value
     {
         private string symbol;
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (!(obj is Symbol sym))
+                return false;
+            return sym.symbol == symbol;
+        }
+
+        public override int GetHashCode() => symbol.GetHashCode();
         
         public override Expression Evaluate(Dictionary<Symbol, Expression> env)
         {

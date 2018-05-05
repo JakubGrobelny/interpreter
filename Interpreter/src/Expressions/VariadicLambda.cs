@@ -6,16 +6,14 @@ namespace Interpreter.Expressions
     {
         private List<Symbol> parameters;
         private List<Expression> expression;
-        
-        public override string Keyword => "vlambda";
-
+    
         public override string ToString()
         {
             throw new System.NotImplementedException();
         }
         
         public override Expression Evaluate(Dictionary<Symbol, Expression> env) =>
-            new VariadicClosure(Keyword, parameters, expression, env);
+            new VariadicClosure("lambda*", parameters, expression, env);
 
         public VariadicLambda(List<Symbol> parameters, List<Expression> expression)
         {

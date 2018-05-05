@@ -22,7 +22,7 @@ namespace Interpreter.Expressions
             for (int i = 1; i < components.Count - 1; i++)
             {
                 var symbol = components[i].Evaluate(env);
-                
+
                 if (finalExpr is Array && symbol is Rational index)
                     finalExpr = ((Array)finalExpr)[index].Evaluate(env);
                 else if (finalExpr is ClassInstance && symbol is Symbol sym)

@@ -4,14 +4,12 @@ namespace Interpreter.Expressions
 {
     public class Definition : SpecialForm
     {
-        public override string Keyword => "def";
-
         private Symbol symbol;
         private Expression expression;
 
         public override string ToString()
         {
-            return "(" + Keyword + " " 
+            return "(def " 
                        + symbol.ToString() 
                        + " " 
                        + expression.ToString() + ")";

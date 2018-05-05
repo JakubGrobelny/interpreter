@@ -168,10 +168,10 @@ namespace Interpreter
                             quoteBraceCounter--;
                         }
                     }
-                    else if (c == scopeOperator)
+                    else if (c == scopeOperator && quoting)
                     {
-                        if (!quoting)
-                            throw new InvalidUseOfScopeOperator(text);
+//                        if (!quoting)
+//                            throw new InvalidUseOfScopeOperator(text);
                         
                         if (token.Length != 0)
                         {

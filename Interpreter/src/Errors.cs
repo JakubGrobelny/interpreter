@@ -4,6 +4,7 @@ using static System.String;
 
 namespace Interpreter
 {
+    //TODO: split into Runtime and Parsing errors
     // Errors in user's code.
     public class InternalException : Exception
     {
@@ -11,6 +12,19 @@ namespace Interpreter
             : base(what) {}
     }
 
+    public class SpecialFormArityMismatch : InternalException
+    {
+        public SpecialFormArityMismatch(string form, int arity, int received)
+            : base(String.Format(("Error! Invalid use of {0} (arity mismatch)\n" +
+                                  "Expected {1}, received {2}"), form, arity, received)) {}
+    }
+
+    public class InvalidUseOfSpecialForm : InternalException
+    {
+        public InvalidUseOfSpecialForm(string form, string expr)
+            : base("Invalid use of " + form + " in " + expr + " !") {}
+    }
+    
     public class InvalidClassInstantiation : InternalException
     {
         public InvalidClassInstantiation(string name)

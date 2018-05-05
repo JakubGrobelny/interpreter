@@ -7,8 +7,6 @@ namespace Interpreter.Expressions
         private Expression condition;
         private Expression ifTrue;
         private Expression ifFalse;
-
-        public override string Keyword => "if";
         
         public override string ToString()
         {

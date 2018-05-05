@@ -6,8 +6,6 @@ namespace Interpreter.Expressions
     public class And : SpecialForm
     {
         private List<Expression> expressions;
-        
-        public override string Keyword => "and";
 
         public override string ToString()
         {

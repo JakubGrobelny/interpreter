@@ -5,9 +5,7 @@ using System.Linq;
 namespace Interpreter.Expressions
 {
     public class ClassDefinition : SpecialForm
-    {
-        public override string Keyword => "defclass";
-        
+    {        
         private Symbol envObjectName;
         private Class definedClass;
         
