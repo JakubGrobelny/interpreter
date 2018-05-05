@@ -12,13 +12,22 @@ namespace Interpreter.Expressions
         public BigInteger Numerator
         {
             get => numerator;
-            set => numerator = value;
+            set
+            {
+                numerator = value;
+                Normalize();
+            }
+
         }
 
         public BigInteger Denominator
         {
             get => denominator;
-            set => denominator = value;
+            set
+            {
+                denominator = value;
+                Normalize();
+            }
         }
 
         public override string ToString()
@@ -45,7 +54,7 @@ namespace Interpreter.Expressions
             if (denominator == 0)
                 throw new DivisionByZero(numerator, denominator);
             
-            var gcd = GCD(numerator, denominator);
+            var gcd = GCD(BigInteger.Abs(numerator), BigInteger.Abs(denominator));
             
             if (gcd != 0)
             {
@@ -100,11 +109,13 @@ namespace Interpreter.Expressions
         public Rational(string str)
         {
             var strBuilder = new StringBuilder();
+            var fraction = false;
 
             foreach (var c in str)
             {
                 if (c == '/')
                 {
+                    fraction = true;
                     this.numerator = BigInteger.Parse(strBuilder.ToString());
                     strBuilder.Clear();
                 }
@@ -112,8 +123,18 @@ namespace Interpreter.Expressions
                     strBuilder.Append(c);
             }
 
-            var den = strBuilder.ToString();
-            this.denominator = den.Length > 0 ? BigInteger.Parse(den) : 1;
+
+            if (fraction)
+            {
+                var den = strBuilder.ToString();
+                this.denominator = den.Length > 0 ? BigInteger.Parse(den) : 1;
+            }
+            else
+            {
+                var num = strBuilder.ToString();
+                this.numerator = BigInteger.Parse(num);
+                this.denominator = 1;
+            }
             Normalize();
         }
 

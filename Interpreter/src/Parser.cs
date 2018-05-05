@@ -53,44 +53,27 @@ namespace Interpreter
                             break;
                         }
                         case "def":
-                        {
-                            if (list.Count != 3)
-                                throw new SpecialFormArityMismatch(keyword.token,
-                                                                   3,
-                                                                   list.Count);
-
-                            if (!(list[1] is Token sym))
-                                throw new InvalidUseOfSpecialForm(keyword.token, 
-                                                                  expression.ToString());
-
-                            var symbol = ExpressionFactory.ParseValue(sym.token);
-                            
-                            if (!(symbol is Symbol s))
-                                throw new InvalidUseOfSpecialForm(keyword.token,
-                                                                  expression.ToString());
-                            
-                            var value = ParseExpression(list[2]);
-                            
-                            return new Definition(s, value);
-                        }
                         case "set!":
                         {
                             if (list.Count != 3)
                                 throw new SpecialFormArityMismatch(keyword.token,
-                                                                   3,
-                                                                   list.Count);
+                                    3,
+                                    list.Count);
+
                             if (!(list[1] is Token sym))
                                 throw new InvalidUseOfSpecialForm(keyword.token,
-                                                                  expression.ToString());
+                                    expression.ToString());
 
                             var symbol = ExpressionFactory.ParseValue(sym.token);
-                            
+
                             if (!(symbol is Symbol s))
                                 throw new InvalidUseOfSpecialForm(keyword.token,
-                                                                  expression.ToString());
+                                    expression.ToString());
 
                             var value = ParseExpression(list[2]);
 
+                            if (keyword == "def")
+                                return new Definition(s, value);
                             return new Set(s, value);
                         }
                         case "if":
@@ -191,19 +174,22 @@ namespace Interpreter
                             
                             if (keyword.token == "lambda")
                                 return new Lambda(paramList, expressions);
-                            else
+                            if (paramList.Count != 0)
                                 return new VariadicLambda(paramList, expressions);
+                            throw new InvalidUseOfSpecialForm(keyword.token, expression.ToString());
                         }
                     }
                 }
-                // function application
-                else
-                {
-                    //TODO: application
-                }
-            }   
 
-            throw new InvalidExpression(expression.ToString());
+                // Else every combination is a function application.
+                var function = ParseExpression(list[0]);
+                var args = new List<Expression>();
+
+                for (int i = 1; i < list.Count; i++)
+                    args.Add(ParseExpression(list[i]));
+
+                return new Application(function, args);
+            }
         }
     }
 }

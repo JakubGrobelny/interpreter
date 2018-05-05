@@ -9,12 +9,9 @@ namespace Interpreter.Expressions
 
         public override Expression Evaluate(Dictionary<Symbol, Expression> env)
         {
-            var proc = procedure.Evaluate(env) as Function;
-        
-            if (proc == null)
+            if (!(procedure.Evaluate(env) is Function proc))
                 throw new ApplicationNotAProcedure(ToString());
-            else
-                return proc.Call(arguments, env);
+            return proc.Call(arguments, env);
         }
 
         public override string ToString()

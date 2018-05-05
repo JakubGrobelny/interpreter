@@ -19,38 +19,42 @@ namespace Interpreter.Expressions
             set => second = value;
         }
 
+        private string ToStringHelper()
+        {
+            var result = first.ToString();
+
+            if (second is Pair p)
+                result += " " + p.ToStringHelper();
+            else if (!(second is Null))
+                result += " " + second.ToString();
+
+            return result;
+        }
+
         public override string ToString()
         {
-            if (second is Pair)
-                return "(" + first.ToString() + " " + second.ToString() + ")";
-            else if (second is Null)
-                return "(" + first.ToString() + ")";
-            else
-                return "(" + first.ToString() + " . " + second.ToString() + ")";
+            return "(" + ToStringHelper() + ")";
         }
 
         public static Value CreateList(List<Expression> elements)
         {
             if (elements.Count == 0)
                 return Null.Instance;
-            else
-            {
-                Pair list = new Pair(elements[0], Null.Instance);
-                Pair ptr = list;
-            
-                for (int i = 1; i < elements.Count; i++)
-                {
-                    ptr.second = new Pair(elements[i], Null.Instance);
-                    ptr = ptr.second as Pair;
-                }
+            Pair list = new Pair(elements[0], Null.Instance);
+            Pair ptr = list;
 
-                return list;
+            for (int i = 1; i < elements.Count; i++)
+            {
+                ptr.second = new Pair(elements[i], Null.Instance);
+                ptr = ptr.second as Pair;
             }
+
+            return list;
         }
 
         public static Bool IsList(Expression list)
         {
-            if ((list is Null) || (list is Pair p && (bool)IsList(p.second)))
+            if (list is Null || (list is Pair p && (bool)IsList(p.second)))
                 return new Bool(true);
             return new Bool(false);
         }

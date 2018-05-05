@@ -71,12 +71,12 @@ namespace Interpreter
             // Types that are more difficult to parse.
             else
             {
+                if (IsRational(expr))
+                    return new Rational(expr);
+
                 double real;
                 if (Double.TryParse(expr, out real))
                     return new Real(real);
-                
-                if (IsRational(expr))
-                    return new Rational(expr);
             }
             
             // Unmatched value is a symbol;

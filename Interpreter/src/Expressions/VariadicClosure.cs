@@ -5,7 +5,7 @@ namespace Interpreter.Expressions
 {
     public class VariadicClosure : Closure
     {
-        public new Expression Call(List<Expression> arguments, Dictionary<Symbol, Expression> env)
+        public override Expression Call(List<Expression> arguments, Dictionary<Symbol, Expression> env)
         {
             // There must an argument for every non-variadic parameter.
             if (arguments.Count < parameters.Count - 1)
@@ -29,8 +29,11 @@ namespace Interpreter.Expressions
             else
             {
                 // Creating a list of arguments.
-                var argTail = arguments.Skip(parameters.Count - 1);
-                argList = Pair.CreateList(argTail as List<Expression>);
+                var argTail = new List<Expression>();
+
+                for (int i = parameters.Count - 1; i < arguments.Count; i++)
+                    argTail.Add(arguments[i].Evaluate(env));
+                argList = Pair.CreateList(argTail);
             }
 
             // Adding variadic argument to the environment,

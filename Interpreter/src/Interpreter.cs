@@ -22,8 +22,9 @@ namespace Interpreter
                 foreach (var expr in list)
                 {
                     var expression = Parser.Instance.ParseExpression(expr);
-                    if (!(expression is Void))
-                        Console.WriteLine(expression.Evaluate(globalEnv).ToString());
+                    var value = expression.Evaluate(globalEnv);
+                    if (!(value is Void))
+                        Console.WriteLine(value.ToString());
                 }
                 //    Console.WriteLine(Parser.Instance.ParseExpression(expr));                
             }
