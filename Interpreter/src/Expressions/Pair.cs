@@ -48,6 +48,13 @@ namespace Interpreter.Expressions
             }
         }
 
+        public static Bool IsList(Expression list)
+        {
+            if ((list is Null) || (list is Pair p && (bool)IsList(p.second)))
+                return new Bool(true);
+            return new Bool(false);
+        }
+        
         public Pair(Expression first, Expression second)
         {
             this.first = first;

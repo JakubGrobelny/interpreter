@@ -8,6 +8,14 @@ namespace Interpreter.Expressions
         private Symbol className;
         
         public override string ToString() => "#<instance-of:" + className + ">";
+
+        public void SetMember(Symbol member, Expression value)
+        {
+            if (!objectEnvironment.ContainsKey(member))
+                throw new InvalidMember(ToString(), member.ToString());
+
+            objectEnvironment[member] = value;
+        }
         
         public Expression GetMember(Symbol memberName, Dictionary<Symbol, Expression> env)
         {

@@ -5,7 +5,7 @@ namespace Interpreter.Expressions
 {
     public abstract class Expression : ICloneable
     {
-        public static explicit operator bool(Expression expr) =>
+        public static implicit operator bool(Expression expr) =>
             !(expr is Bool) || (expr as Bool).GetValue();
         
         public abstract object Clone();

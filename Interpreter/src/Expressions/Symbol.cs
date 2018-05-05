@@ -8,16 +8,21 @@ namespace Interpreter.Expressions
         
         public override Expression Evaluate(Dictionary<Symbol, Expression> env)
         {
-            try
-            {
+            if (env.ContainsKey(this))
                 return env[this];
-            }
-            catch
-            {
-                throw new UnboundVariable(ToString());
-            }
+            throw new UnboundVariable(ToString());
         }
 
+        public Void Set(Dictionary<Symbol, Expression> env, Expression value)
+        {
+            if (env.ContainsKey(this))
+            {
+                env[this] = value;
+                return Void.Instance;
+            }
+            throw new UnboundVariable(ToString());
+        }
+        
         public override object Clone() => new Symbol(symbol);
 
         public bool IsThis() => symbol == "this";
@@ -27,6 +32,11 @@ namespace Interpreter.Expressions
             return symbol;
         }
 
+        public Symbol()
+        {
+            symbol = "";
+        }
+        
         public Symbol(string symbol)
         {
             this.symbol = symbol;
