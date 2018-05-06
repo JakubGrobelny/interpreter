@@ -33,8 +33,11 @@ namespace Interpreter.Expressions
 
         public override string ToString()
         {
+            //TODO: fix (cons (list 1 2) (list 3 4))  ;; result is '((1 2) 2 3) instead of '((1 2) . (2 3))
             if (!IsList(this))
-                return "(" + first + " . " + second + ")";
+            {
+                return "(" + first + " . " + second.ToString() + ")";
+            }
             else
                 return "(" + ToStringHelper() + ")";
         }

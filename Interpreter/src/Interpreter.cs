@@ -36,8 +36,7 @@ namespace Interpreter
                     {
                         var expression = Parser.Instance.ParseExpression(expr);
                         var value = expression.Evaluate(globalEnv);
-                        if (!(value is Void))
-                            Console.WriteLine(value.ToString());
+                        Printer.Instance.Print(value);
                     }
                 }
                 catch (InternalException exc)
@@ -53,9 +52,6 @@ namespace Interpreter
                 }
 
             }
-
-
-            //Console.ReadKey();
         }
 
         // Default built-in values in environment.
@@ -285,6 +281,15 @@ namespace Interpreter
                     return new Bool(arguments[0].Evaluate(environment) is Pair);
                 });
 
+            env[new Symbol("list?")] = new InternalClosure("list?",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("list?", 1, arguments.Count);
+
+                    return new Bool(Pair.IsList(arguments[0].Evaluate(environment)));
+                });
+
             env[new Symbol("cons")] = new InternalClosure("cons",
                 (arguments, environment) =>
                 {
@@ -343,6 +348,36 @@ namespace Interpreter
                         throw new InvalidArgument("string->symbol", arguments[0].Evaluate(environment).ToString());
 
                     return new Symbol(str.Value);
+                });
+
+            env[new Symbol("list->string")] = new InternalClosure("list->string",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("list->string", 1, arguments.Count);
+
+                    Expression list = arguments[0].Evaluate(environment);
+
+                    if (!Pair.IsList(list))
+                        throw new InvalidArgument("list->string", list.ToString());
+
+                    if (list is Null)
+                        return new StringLiteral("\"\"");
+
+                    list = (Pair) list;
+                    var finalString = "";
+
+                    var castedList = Pair.CastToList(list);
+
+                    foreach (var expr in castedList)
+                    {
+                        if (!(expr.Evaluate(environment) is StringLiteral str))
+                            throw new InvalidArgument("list->string", expr.ToString());
+
+                        finalString += str.Value;
+                    }
+
+                    return new StringLiteral("\"" + finalString + "\"");
                 });
 
             return env;

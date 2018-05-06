@@ -38,19 +38,24 @@ namespace Interpreter
                         {    
                             if (list.Count != 2)
                                 throw new SpecialFormArityMismatch(keyword.token, 
-                                                                   2, 
+                                                                   1,
                                                                    list.Count);
                             if (list[1] is Token value)
-                                return ExpressionFactory.ParseValue(list[1].ToString());
-                            else if (list[1] is TokenTree ls)
+                                return new Quote(ExpressionFactory.ParseValue(list[1].ToString()));
+
+                            // TODO: fix: lexer thinks that '() '() is (quote () ' ()) which results in arity mismatch.
+                            else
                             {
-                                //var tempList = new List<Expression>();
-                                // TODO:
-                                throw new NotImplementedException("list quoting"); 
+                                var ls = (TokenNode) list[1];
+                                var tempList = new List<Expression>();
+
+                                foreach (var expr in ls.children)
+                                    tempList.Add(ParseExpression(expr));
+
+                                var quotedList = Pair.CreateList(tempList);
+                                return new Quote(quotedList);
                             }
-                            
-                            //TODO: quoting (preferably create a list)
-                            break;
+
                         }
                         case "def":
                         case "set!":
@@ -80,7 +85,7 @@ namespace Interpreter
                         {
                             if (list.Count != 4)
                                 throw new SpecialFormArityMismatch(keyword.token,
-                                                                   4,
+                                                                   3,
                                                                    list.Count);
                             var cond = ParseExpression(list[1]);
                             var ifTrue = ParseExpression(list[2]);
@@ -145,7 +150,7 @@ namespace Interpreter
                         {
                             if (list.Count < 3)
                                 throw new SpecialFormArityMismatch(keyword.token,
-                                                                   3,
+                                                                   2,
                                                                    list.Count);
                             
                             if (!(list[1] is TokenNode parameters))
