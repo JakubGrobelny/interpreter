@@ -70,7 +70,7 @@ namespace Interpreter
                     bracketCnt--;
             }
 
-            return bracketCnt == 0;
+            return bracketCnt <= 0;
         }
 
         private void CheckBraces(string text)

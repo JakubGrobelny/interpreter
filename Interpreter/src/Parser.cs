@@ -44,6 +44,7 @@ namespace Interpreter
                                 return new Quote(ExpressionFactory.ParseValue(list[1].ToString()));
 
                             // TODO: fix: lexer thinks that '() '() is (quote () ' ()) which results in arity mismatch.
+                            // TODO: fix '' ; result is '(') instead of error
                             else
                             {
                                 var ls = (TokenNode) list[1];

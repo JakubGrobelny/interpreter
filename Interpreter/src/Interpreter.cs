@@ -7,6 +7,8 @@ namespace Interpreter
 {
     public static class Interpreter
     {
+        private static Random randomizer = new Random();
+
         private static bool quit = false;
 
         public static void Main(string[] args)
@@ -17,6 +19,8 @@ namespace Interpreter
 
             while (!quit)
             {
+                // TODO: make if possible to get previous input with ctrl+up
+
                 try
                 {
                     if (input == "")
@@ -58,6 +62,10 @@ namespace Interpreter
         private static Dictionary<Symbol, Expression> InitGlobalEnv()
         {
             var env = new Dictionary<Symbol, Expression>();
+
+            // TODO: symbol->string, open-file
+
+            // TODO: change the evaluation rules for InternalClosures (they kinda use lazy evaluation not so I need to cast arguments every time)
 
             env[new Symbol("+")] = new InternalClosure("+",
                 (arguments, environment) =>
@@ -143,7 +151,6 @@ namespace Interpreter
                 });
 
             // Applies function to the arguments from the list.
-            //TODO: test it when i have lists implemented
             env[new Symbol("apply")] = new InternalClosure("apply",
                 (arguments, environment) =>
                 {
@@ -312,11 +319,35 @@ namespace Interpreter
                     var num2expr = arguments[1].Evaluate(environment);
 
                     if (!(num1expr is Number num1))
-                        throw new InvalidArgument("=", arguments[0].ToString());
+                        throw new InvalidArgument("=",num1expr.ToString());
                     if (!(num2expr is Number num2))
-                        throw new InvalidArgument("=", arguments[1].ToString());
+                        throw new InvalidArgument("=", num2expr.ToString());
 
                     return new Bool((double) num1 > (double) num2);
+                });
+
+            env[new Symbol("random")] = new InternalClosure("random",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 2)
+                        throw new ArityMismatch("random", 2, arguments.Count);
+
+                    var arg1 = arguments[0].Evaluate(environment);
+                    var arg2 = arguments[1].Evaluate(environment);
+
+                    if (!(arg1 is Number start))
+                        throw new InvalidArgument("random", arg1.ToString());
+                    if (!(arg2 is Number end))
+                        throw new InvalidArgument("random", arg2.ToString());
+
+                    try
+                    {
+                        return new Rational(randomizer.Next((int) (double) start, (int) (double) end));
+                    }
+                    catch (ArgumentOutOfRangeException exc)
+                    {
+                        throw new InvalidArgument("random", arg2.ToString());
+                    }
                 });
 
             env[new Symbol("string->list")] = new InternalClosure("string->list",
@@ -348,6 +379,28 @@ namespace Interpreter
                         throw new InvalidArgument("string->symbol", arguments[0].Evaluate(environment).ToString());
 
                     return new Symbol(str.Value);
+                });
+
+            env[new Symbol("val->string")] = new InternalClosure("val->string",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("val->string", 1, arguments.Count);
+
+                    return new StringLiteral("\"" + arguments[0].Evaluate(environment) + "\"");
+                });
+
+            env[new Symbol("string->val")] = new InternalClosure("string->val",
+                (arguments, environment) =>
+                {
+                    if (arguments.Count != 1)
+                        throw new ArityMismatch("string->val", 1, arguments.Count);
+
+                    if (!(arguments[0].Evaluate(environment) is StringLiteral str))
+                        throw new InvalidArgument("string->val", arguments[0].Evaluate(environment).ToString());
+
+                    //TODO: special rules for lists
+                    return ExpressionFactory.ParseValue(str.Value);
                 });
 
             env[new Symbol("list->string")] = new InternalClosure("list->string",
