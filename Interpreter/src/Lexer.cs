@@ -135,11 +135,8 @@ namespace Interpreter
                 if (c == COMMENT)
                     readingComment = true;
                 if (c == '\n')
-                {
                     readingComment = false;
-                    continue;
-                }
-                
+
                 if (!readingComment)
                 {
                     if (c == '"')
@@ -197,7 +194,7 @@ namespace Interpreter
                             token.Clear();
                         }
                     }
-                    else if (IsWhiteSpace(c) && !readingString)
+                    else if ((IsWhiteSpace(c)) && !readingString)
                     {
                         if (token.Length == 0) 
                             continue;

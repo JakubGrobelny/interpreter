@@ -26,9 +26,12 @@ namespace Interpreter
                     if (input == "")
                         Console.Write("|=> ");
                     else
+                    {
                         Console.Write("    ");
+                        input += ' ';
+                    }
 
-                    input += Console.ReadLine();
+                    input += Console.ReadLine() + '\n';
 
                     if (!Lexer.Instance.IsComplete(input))
                         continue;
@@ -65,7 +68,7 @@ namespace Interpreter
 
             // TODO: symbol->string, open-file
 
-            // TODO: change the evaluation rules for InternalClosures (they kinda use lazy evaluation not so I need to cast arguments every time)
+            // TODO: change the evaluation rules for InternalClosures (they kinda use lazy evaluation so I need to cast arguments every time)
 
             env[new Symbol("+")] = new InternalClosure("+",
                 (arguments, environment) =>
